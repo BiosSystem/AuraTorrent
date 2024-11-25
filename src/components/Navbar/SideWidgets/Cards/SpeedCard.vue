@@ -1,10 +1,19 @@
 <script setup lang="ts">
 import BaseCard from './BaseCard.vue'
-import { CardProps } from './CardProps'
 import { formatSpeedUnit, formatSpeedValue } from '@/helpers'
 import { useVueTorrentStore } from '@/stores'
 
-const childProps = defineProps<CardProps<number>>()
+interface Props {
+  active?: boolean
+  grow?: boolean
+  title: string
+  icon: string
+  orientation?: 'row' | 'column'
+  color?: string
+  value: number | number[]
+}
+
+const childProps = defineProps<Props>()
 
 const vueTorrentStore = useVueTorrentStore()
 </script>

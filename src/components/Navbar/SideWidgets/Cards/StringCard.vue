@@ -1,8 +1,17 @@
 <script setup lang="ts">
 import BaseCard from './BaseCard.vue'
-import { CardProps } from './CardProps'
 
-const childProps = defineProps<CardProps<any>>()
+interface Props {
+  active?: boolean
+  grow?: boolean
+  title: string
+  icon: string
+  orientation?: 'row' | 'column'
+  color?: string
+  value: any | any[]
+}
+
+const childProps = defineProps<Props>()
 </script>
 
 <template>
