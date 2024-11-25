@@ -22,10 +22,19 @@ export default defineConfig(({ mode }) => {
       outDir: mode === 'demo' ? './vuetorrent-demo' : './auratorrent/public',
       rollupOptions: {
         output: {
-          manualChunks: {
-            // apexcharts: ['apexcharts', 'vue3-apexcharts'],
-            vue: ['vue', 'vue-router', 'vue-i18n', 'vue3-toastify', 'vuedraggable', 'pinia', 'pinia-persistence-plugin'],
-            vuetify: ['vuetify'],
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              if (id.includes('vuetify')) {
+                return 'vuetify'
+              }
+              if (
+                id.includes('vue') ||
+                id.includes('pinia') ||
+                id.includes('vuedraggable')
+              ) {
+                return 'vue'
+              }
+            }
           },
         },
       },
