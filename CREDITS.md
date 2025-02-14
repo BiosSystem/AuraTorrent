@@ -1,4 +1,4 @@
-# AuraTorrent Credits & Acknowledgments
+﻿# AuraTorrent Credits & Acknowledgments
 
 **AuraTorrent** is the enterprise-grade, hardened WebUI skin for qBittorrent, engineered as part of the **BiosSystem** open-source project suite.
 
@@ -67,15 +67,15 @@ AuraTorrent is a fork of **VueTorrent**, and we explicitly acknowledge, honor, a
 
 This release was rebranded and enhanced by the **BiosSystem** team with:
 
-1. **AuraTorrent Brand Identity** — Visual and architectural integration with the BiosSystem ecosystem
-2. **WebSocket Auto-Reconnect** — Exponential backoff recovery logic for qBittorrent daemon restarts
-3. **Physical Directory Alignment** — `auratorrent/public` packaging to resolve qBittorrent C++ web server parsing errors
-4. **Multi-Daemon Server Switcher** — Glassmorphic navbar dropdown for managing multiple qBittorrent instances
-5. **BiosSystem Easter Eggs** — Diagnostic HUD overlays and B-I-O-S keyboard sequence
-6. **Bandwidth Scheduler** — Interactive weekly speed limit timetable backed by Pinia + localStorage
-7. **ThemeLab** — Real-time CSS custom property editor for live theme customization
-8. **SpeedTicker** — Animated live transfer speed display
+1. **AuraTorrent Brand Identity** - Visual and architectural integration with the BiosSystem ecosystem
+2. **WebSocket Auto-Reconnect** - Exponential backoff recovery logic for qBittorrent daemon restarts
+3. **Physical Directory Alignment** - `auratorrent/public` packaging to resolve qBittorrent C++ web server parsing errors
+4. **Multi-Daemon Server Switcher** - Glassmorphic navbar dropdown for managing multiple qBittorrent instances
+5. **BiosSystem Easter Eggs** - Diagnostic HUD overlays and B-I-O-S keyboard sequence
+6. **Bandwidth Scheduler** - Interactive weekly speed limit timetable backed by Pinia + localStorage
+7. **ThemeLab** - Real-time CSS custom property editor for live theme customization
+8. **SpeedTicker** - Animated live transfer speed display
 
 ---
 
-*Powered by BiosSystem — Open Source Community*
+*Powered by BiosSystem - Open Source Community*

@@ -1,4 +1,4 @@
-<p align="center">
+﻿<p align="center">
   <img src="https://readme-typing-svg.demolab.com?font=Share+Tech+Mono&weight=bold&size=34&duration=3000&pause=1000&color=00FF72&center=true&vCenter=true&width=435&lines=AuraTorrent;Next-Gen+WebUI;BiosSystem+Kernel" alt="AuraTorrent Typing Title" />
 </p>
 
@@ -52,10 +52,10 @@
 
 Unlike standard qBittorrent WebUIs, AuraTorrent includes next-gen features designed for power users:
 
-- **Bandwidth Scheduling Matrix** — A 7×24 visual heatmap grid to paint your bandwidth schedule visually. The UI automatically throttles qBittorrent based on the current hour.
-- **AuraTheme Engine** — A live, built-in CSS variable editor. Adjust glassmorphism blur, neon glow intensity, and accent colors in real-time, then export to JSON.
-- **Global Speed Ticker** — Press `Ctrl+Shift+T` anywhere to summon a floating, always-on-top HUD sparkline graph of your current I/O speeds.
-- **B-I-O-S Easter Egg** — Type `B-I-O-S` on your keyboard to unlock the BiosSystem Kernel Diagnostic HUD.
+- **Bandwidth Scheduling Matrix** - A 7×24 visual heatmap grid to paint your bandwidth schedule visually. The UI automatically throttles qBittorrent based on the current hour.
+- **AuraTheme Engine** - A live, built-in CSS variable editor. Adjust glassmorphism blur, neon glow intensity, and accent colors in real-time, then export to JSON.
+- **Global Speed Ticker** - Press `Ctrl+Shift+T` anywhere to summon a floating, always-on-top HUD sparkline graph of your current I/O speeds.
+- **B-I-O-S Easter Egg** - Type `B-I-O-S` on your keyboard to unlock the BiosSystem Kernel Diagnostic HUD.
 
 ## 📊 Feature Matrix Comparison
 
