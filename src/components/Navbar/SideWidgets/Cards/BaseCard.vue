@@ -1,8 +1,17 @@
 <script setup lang="ts" generic="T">
 import { computed } from 'vue'
-import { CardProps } from './CardProps'
 
-const { active = false, title, icon, orientation = 'column', color } = defineProps<CardProps<T>>()
+interface Props {
+  active?: boolean
+  grow?: boolean
+  title: string
+  icon: string
+  orientation?: 'row' | 'column'
+  color?: string
+  value: T | T[]
+}
+
+const { active = false, title, icon, orientation = 'column', color } = defineProps<Props>()
 
 defineEmits<{
   click: [MouseEvent]
