@@ -1,0 +1,237 @@
+name: Build and Release AuraTorrent
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+permissions:
+  contents: write
+  packages: write
+  pull-requests: write
+
+jobs:
+  setup-release:
+    name: Run Release Please
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      upload_url: ${{ steps.release.outputs.upload_url }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+      nightly_version: ${{ steps.version.outputs.nightly_version }}
+    steps:
+      - name: Run release please
+        uses: googleapis/release-please-action@v5
+        id: release
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Generate nightly version
+        id: version
+        run: echo "nightly_version=$(git describe --tags --exclude latest_nightly)" >> $GITHUB_OUTPUT
+
+      - name: Update nightly tag
+        run: |
+          git tag -f latest_nightly
+          git push -f --tags
+
+  build-release:
+    name: Build AuraTorrent (${{ matrix.npm-step }})
+    runs-on: ubuntu-latest
+    needs: setup-release
+    strategy:
+      matrix:
+        npm-step: ['build', 'build-demo']
+        include:
+          - npm-step: build
+            artifact-name: auratorrent-build
+            artifact-path: ./auratorrent
+          - npm-step: build-demo
+            artifact-name: auratorrent-demo
+            artifact-path: ./auratorrent-demo
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 'latest'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build AuraTorrent
+        run: |
+          npm version --no-commit-hooks --no-git-tag-version --allow-same-version ${{ needs.setup-release.outputs.nightly_version }}
+          npm run ${{ matrix.npm-step }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.artifact-name }}
+          path: ${{ matrix.artifact-path }}
+          retention-days: 1
+
+  push-nightly:
+    name: Push to nightly branch
+    runs-on: ubuntu-latest
+    needs: build-release
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: auratorrent-build
+          path: ./auratorrent
+
+      - name: Push to nightly-release branch
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: nightly-release
+          folder: ./auratorrent
+
+  push-mod-nightly:
+    name: Push Docker mod to GHCR (nightly)
+    runs-on: ubuntu-latest
+    needs: build-release
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: auratorrent-build
+          path: ./auratorrent
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ghcr.io/biossystem/auratorrent-lsio-mod
+          tags: |
+            type=raw,value=nightly
+            type=sha
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v7
+        env:
+          DOCKER_BUILD_SUMMARY: false
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  upload-release:
+    name: Upload release assets to GitHub
+    needs: [setup-release, build-release]
+    if: needs.setup-release.outputs.release_created
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: auratorrent-build
+          path: ./auratorrent
+
+      - name: Zip AuraTorrent
+        run: zip -qq -r ./auratorrent.zip ./auratorrent
+
+      - name: Upload release asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.setup-release.outputs.tag_name }}
+          files: ./auratorrent.zip
+
+  push-release:
+    name: Push to latest-release branch
+    needs: [setup-release, build-release]
+    if: needs.setup-release.outputs.release_created
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: auratorrent-build
+          path: ./auratorrent
+
+      - name: Push to latest-release branch
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: latest-release
+          folder: ./auratorrent
+
+  push-mod-release:
+    name: Push Docker mod to GHCR (release)
+    runs-on: ubuntu-latest
+    needs: [setup-release, build-release]
+    if: needs.setup-release.outputs.release_created
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: auratorrent-build
+          path: ./auratorrent
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ghcr.io/biossystem/auratorrent-lsio-mod
+          tags: |
+            type=match,pattern=v(.*),group=1,value=${{ needs.setup-release.outputs.tag_name }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v7
+        env:
+          DOCKER_BUILD_SUMMARY: false
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
