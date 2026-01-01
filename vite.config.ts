@@ -1,0 +1,306 @@
+/// <reference types="vitest" />
+import vue from '@vitejs/plugin-vue'
+import { resolve } from 'node:path'
+import { fileURLToPath, URL } from 'node:url'
+import { defineConfig, loadEnv } from 'vite'
+import { VitePWA } from 'vite-plugin-pwa'
+import vuetify from 'vite-plugin-vuetify'
+import ViteFonts from 'unplugin-fonts/vite'
+
+// https://vitejs.dev/config/
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd())
+  const qBittorrentTarget = env.VITE_QBITTORRENT_TARGET ?? 'http://localhost:8080'
+
+  return {
+    base: './',
+    build: {
+      target: 'esnext',
+      minify: 'esbuild',
+      cssMinify: 'lightningcss',
+      sourcemap: false,
+      outDir: mode === 'demo' ? './vuetorrent-demo' : './auratorrent/public',
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            // apexcharts: ['apexcharts', 'vue3-apexcharts'],
+            vue: ['vue', 'vue-router', 'vue-i18n', 'vue3-toastify', 'vuedraggable', 'pinia', 'pinia-persistence-plugin'],
+            vuetify: ['vuetify'],
+          },
+        },
+      },
+    },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: 'modern-compiler',
+        },
+      },
+    },
+    define: {
+      'import.meta.env.VITE_PACKAGE_VERSION': JSON.stringify(process.env.npm_package_version),
+      'process.env': {},
+    },
+    plugins: [
+      vue(),
+      vuetify(),
+      ViteFonts({
+        fontsource: {
+          families: [
+            {
+              name: 'Roboto',
+              weights: [100, 300, 400, 500, 700, 900],
+              styles: ['normal', 'italic'],
+            },
+          ],
+        },
+      }),
+      VitePWA({
+        devOptions: {
+          enabled: false,
+        },
+        includeAssets: ['robots.txt', 'icon.svg', 'apple-touch-icon-180x180.png', 'favicon.ico'],
+        manifest: {
+          background_color: '#000',
+          categories: ['utilities'],
+          description: 'Enterprise WebUI for qBittorrent powered by Bios System Kernel',
+          file_handlers: [
+            {
+              action: '.',
+              accept: {
+                'application/x-bittorrent': ['.torrent'],
+                'text/magnet': ['.magnet'],
+              },
+            },
+          ],
+          icons: [
+            {
+              src: 'pwa-64x64.png',
+              sizes: '64x64',
+              type: 'image/png',
+            },
+            {
+              src: 'pwa-192x192.png',
+              sizes: '192x192',
+              type: 'image/png',
+            },
+            {
+              src: 'pwa-512x512.png',
+              sizes: '512x512',
+              type: 'image/png',
+            },
+            {
+              src: 'maskable-icon-512x512.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'maskable',
+            },
+          ],
+          launch_handler: {
+            client_mode: 'focus-existing',
+          },
+          name: 'AuraTorrent',
+          protocol_handlers: [
+            {
+              protocol: 'magnet',
+              url: './#/magnet/%s',
+            },
+          ],
+          scope: './',
+          screenshots: [
+            {
+              src: 'https://cdn.jsdelivr.net/gh/BiosSystem/AuraTorrent@master/docs/screenshots/screenshot-desktop.webp',
+              sizes: '1788x909',
+              type: 'image/webp',
+              form_factor: 'wide',
+              label: 'Screenshot Desktop (Light Mode)',
+            },
+            {
+              src: 'https://cdn.jsdelivr.net/gh/BiosSystem/AuraTorrent@master/docs/screenshots/screenshot-desktop-dark-mode.webp',
+              sizes: '1788x909',
+              type: 'image/webp',
+              form_factor: 'wide',
+              label: 'Screenshot Desktop (Dark Mode)',
+            },
+            {
+              src: 'https://cdn.jsdelivr.net/gh/BiosSystem/AuraTorrent@master/docs/screenshots/screenshot-mobile.webp',
+              sizes: '425x885',
+              type: 'image/webp',
+              form_factor: 'narrow',
+              label: 'Screenshot Mobile Dashboard (Light Mode)',
+            },
+            {
+              src: 'https://cdn.jsdelivr.net/gh/BiosSystem/AuraTorrent@master/docs/screenshots/screenshot-mobile-navbar.webp',
+              sizes: '425x885',
+              type: 'image/webp',
+              form_factor: 'narrow',
+              label: 'Screenshot Mobile Navbar (Light Mode)',
+            },
+            {
+              src: 'https://cdn.jsdelivr.net/gh/BiosSystem/AuraTorrent@master/docs/screenshots/screenshot-mobile-dark-mode.webp',
+              sizes: '425x885',
+              type: 'image/webp',
+              form_factor: 'narrow',
+              label: 'Screenshot Mobile Dashboard (Dark Mode)',
+            },
+            {
+              src: 'https://cdn.jsdelivr.net/gh/BiosSystem/AuraTorrent@master/docs/screenshots/screenshot-mobile-navbar-dark-mode.webp',
+              sizes: '425x885',
+              type: 'image/webp',
+              form_factor: 'narrow',
+              label: 'Screenshot Mobile Navbar (Dark Mode)',
+            },
+          ],
+          short_name: 'AuraTorrent',
+          shortcuts: [
+            {
+              name: 'Dashboard',
+              url: './#/',
+              icons: [
+                {
+                  src: 'https://cdn.jsdelivr.net/gh/BiosSystem/AuraTorrent@master/docs/icons/mdi-view-dashboard-192.png',
+                  type: 'image/png',
+                  sizes: '192x192',
+                },
+              ],
+            },
+            {
+              name: 'Settings',
+              url: './#/settings',
+              icons: [
+                {
+                  src: 'https://cdn.jsdelivr.net/gh/BiosSystem/AuraTorrent@master/docs/icons/mdi-cog-192.png',
+                  type: 'image/png',
+                  sizes: '192x192',
+                },
+              ],
+            },
+            {
+              name: 'RSS Feeds',
+              url: './#/rss',
+              icons: [
+                {
+                  src: 'https://cdn.jsdelivr.net/gh/BiosSystem/AuraTorrent@master/docs/icons/mdi-rss-192.png',
+                  type: 'image/png',
+                  sizes: '192x192',
+                },
+              ],
+            },
+            {
+              name: 'Search Engine',
+              url: './#/search',
+              icons: [
+                {
+                  src: 'https://cdn.jsdelivr.net/gh/BiosSystem/AuraTorrent@master/docs/icons/mdi-search-web-192.png',
+                  type: 'image/png',
+                  sizes: '192x192',
+                },
+              ],
+            },
+            {
+              name: 'Logs',
+              url: './#/logs',
+              icons: [
+                {
+                  src: 'https://cdn.jsdelivr.net/gh/BiosSystem/AuraTorrent@master/docs/icons/mdi-file-document-multiple-192.png',
+                  type: 'image/png',
+                  sizes: '192x192',
+                },
+              ],
+            },
+            {
+              name: 'Torrent Creator',
+              url: './#/torrentCreator',
+              icons: [
+                {
+                  src: 'https://cdn.jsdelivr.net/gh/BiosSystem/AuraTorrent@master/docs/icons/mdi-file-plus-192.png',
+                  type: 'image/png',
+                  sizes: '192x192',
+                },
+              ],
+            },
+            {
+              name: 'Cookies Manager',
+              url: './#/cookies',
+              icons: [
+                {
+                  src: 'https://cdn.jsdelivr.net/gh/BiosSystem/AuraTorrent@master/docs/icons/mdi-cookie-192.png',
+                  type: 'image/png',
+                  sizes: '192x192',
+                },
+              ],
+            },
+          ],
+          start_url: './#/',
+          theme_color: '#64CEAA',
+        },
+        registerType: 'autoUpdate',
+        useCredentials: true,
+        workbox: {
+          cleanupOutdatedCaches: true,
+          globIgnores: ['**/index.html'],
+          navigateFallback: undefined,
+          runtimeCaching: [
+            {
+              urlPattern: ({ request }) => request.mode === 'navigate',
+              handler: 'NetworkOnly',
+            },
+            {
+              urlPattern: ({ request }) => request.destination === 'font',
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'font-cache',
+                expiration: {
+                  maxEntries: 50,
+                  maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+                },
+                cacheableResponse: {
+                  statuses: [200],
+                },
+              },
+            },
+          ],
+        },
+      }),
+    ],
+    publicDir: './public',
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url)),
+      },
+    },
+    server: {
+      host: '127.0.0.1',
+      port: 3000,
+      proxy: {
+        '/api': {
+          secure: false,
+          changeOrigin: true,
+          xfwd: false,
+          target: qBittorrentTarget,
+          headers: {
+            'X-Forwarded-For': '127.0.0.1',
+          },
+        },
+        '/backend': {
+          secure: false,
+          changeOrigin: true,
+          target: qBittorrentTarget,
+        },
+      },
+    },
+    test: {
+      environment: 'jsdom',
+      globals: true,
+      setupFiles: [resolve(__dirname, 'tests/setup.ts')],
+      coverage: {
+        reportsDirectory: './tests/unit/coverage',
+      },
+      server: {
+        deps: {
+          inline: ['vuetify'],
+        },
+      },
+    },
+  }
+})

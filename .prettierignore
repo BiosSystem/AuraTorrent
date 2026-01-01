@@ -1,0 +1,5 @@
+.gitignore
+.release-please-manifest.json
+public/
+.github/
+vuetorrent/
