@@ -1,0 +1,292 @@
+/* ============================================================
+   AuraTorrent — BiosSystem Design System
+   Premium Dark Glassmorphism UI — 2026
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+ul.no-bullet {
+  list-style-type: none;
+}
+
+.cursor-pointer { cursor: pointer; }
+.cursor-help    { cursor: help; }
+
+@each $type in row, column {
+  .flex-gap,
+  .flex-gap-#{$type} {
+    &-small { #{$type}-gap: 4px; }
+    &       { #{$type}-gap: 8px; }
+    &-large { #{$type}-gap: 16px; }
+  }
+}
+
+:where(.wrap-word)     { overflow-wrap: break-word; }
+:where(.wrap-anywhere) { overflow-wrap: anywhere; }
+
+.text-noselect {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.text-select {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+:where(.inherit-bg) { background-color: inherit; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar       { width: 5px; background: transparent; }
+::-webkit-scrollbar-thumb {
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(0, 212, 255, 0.6) 0%, rgba(99, 38, 194, 0.6) 100%);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.v-list::-webkit-scrollbar { width: 0.5rem; }
+
+tr.ripple-fix { transform: translate(0); clip-path: inset(0); }
+
+/* iOS PWA safe areas */
+.ios-padding { padding-top: calc(env(safe-area-inset-top) * 0.5); }
+.ios-margin  { margin-top:  calc(env(safe-area-inset-top) * 0.5); }
+
+/* ── Grid utilities ── */
+.d-grid { display: grid; }
+
+@for $i from 1 through 4 {
+  $i-step: $i * 2;
+  .grid-columns-#{$i-step} { grid-template-columns: repeat($i-step, 1fr); }
+}
+
+@for $i from 1 through 8 {
+  .grid-col-span-#{$i} { grid-column: span $i; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   GLOBAL FLONT & FLUID TYPOGRAPHY VARIABLES
+   ───────────────────────────────────────────────────────────── */
+:root {
+  --fluid-font-xs: clamp(0.7rem, 0.65rem + 0.2vw, 0.88rem);
+  --fluid-font-sm: clamp(0.78rem, 0.72rem + 0.25vw, 1.0rem);
+  --fluid-font-base: clamp(0.88rem, 0.82rem + 0.3vw, 1.15rem);
+  --fluid-font-lg: clamp(1.05rem, 0.98rem + 0.4vw, 1.45rem);
+  --fluid-font-xl: clamp(1.35rem, 1.25rem + 0.6vw, 1.95rem);
+}
+
+body,
+.v-application {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-size: var(--fluid-font-base) !important;
+  letter-spacing: -0.012em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   GLASSMORPHISM SURFACE SYSTEM
+   ───────────────────────────────────────────────────────────── */
+.v-card {
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.065) !important;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.35),
+    0 1px 4px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+  border-radius: 18px !important;
+  transition:
+    transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+/* Translate hover effects strictly restricted to interactive/clickable cards */
+.v-card.v-card--link:hover,
+.v-card.interactive-card:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 12px 36px rgba(0, 212, 255, 0.14),
+    0 2px 8px rgba(0, 212, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(0, 212, 255, 0.22) !important;
+}
+
+/* Glassmorphic App Bar */
+.v-app-bar {
+  border-radius: 0 !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.065) !important;
+  background: rgba(13, 17, 23, 0.75) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Glassmorphic Drawer */
+.v-navigation-drawer {
+  border-radius: 0 !important;
+  border: none !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.065) !important;
+  background: rgba(9, 13, 22, 0.75) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   BUTTONS
+   ───────────────────────────────────────────────────────────── */
+.v-btn {
+  text-transform: none !important;
+  font-weight: 600 !important;
+  border-radius: 12px !important;
+  letter-spacing: 0.01em;
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease !important;
+}
+
+.v-btn:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(0, 212, 255, 0.2) !important;
+}
+
+.v-btn:active {
+  transform: scale(0.98);
+}
+
+
+
+/* ─────────────────────────────────────────────────────────────
+   LIST ITEMS — hover glow
+   ───────────────────────────────────────────────────────────── */
+.v-list-item {
+  border-radius: 10px !important;
+  margin: 2px 6px;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.v-list-item:hover {
+  background: rgba(0, 212, 255, 0.07) !important;
+  transform: translateX(3px);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   TYPOGRAPHY UTILITIES
+   ───────────────────────────────────────────────────────────── */
+.text-accent {
+  background: linear-gradient(135deg, #00d4ff 0%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+.text-muted {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   PROGRESS BARS — accent gradient
+   ───────────────────────────────────────────────────────────── */
+.v-progress-linear__determinate {
+  background: linear-gradient(90deg, #00d4ff 0%, #7c3aed 100%) !important;
+  border-radius: 8px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   DATA TABLE ROWS
+   ───────────────────────────────────────────────────────────── */
+.v-data-table tbody tr:hover td {
+  background: rgba(0, 212, 255, 0.04) !important;
+  transition: background 0.15s ease;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SPEED BADGE
+   ───────────────────────────────────────────────────────────── */
+.speed-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.speed-badge--dl {
+  background: rgba(0, 212, 255, 0.12);
+  color: #00d4ff;
+  border: 1px solid rgba(0, 212, 255, 0.25);
+}
+
+.speed-badge--ul {
+  background: rgba(124, 58, 237, 0.12);
+  color: #a78bfa;
+  border: 1px solid rgba(124, 58, 237, 0.25);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   CHIP / TAG
+   ───────────────────────────────────────────────────────────── */
+.v-chip {
+  border-radius: 8px !important;
+  font-weight: 500;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   INPUT FIELDS
+   ───────────────────────────────────────────────────────────── */
+.v-field {
+  border-radius: 12px !important;
+}
+
+.v-field--focused .v-field__outline {
+  color: #00d4ff !important;
+  box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.15);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   MULTI-DAEMON SERVER SWITCHER DROPDOWN
+   ───────────────────────────────────────────────────────────── */
+.daemon-switcher {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 12px;
+  background: rgba(0, 212, 255, 0.07);
+  border: 1px solid rgba(0, 212, 255, 0.18);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #00d4ff;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.daemon-switcher:hover {
+  background: rgba(0, 212, 255, 0.14);
+  border-color: rgba(0, 212, 255, 0.35);
+  box-shadow: 0 4px 16px rgba(0, 212, 255, 0.15);
+}
+
+.daemon-switcher__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00d4ff;
+  box-shadow: 0 0 8px #00d4ff;
+  animation: daemonPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes daemonPulse {
+  0%, 100% { box-shadow: 0 0 4px #00d4ff; opacity: 1; }
+  50%       { box-shadow: 0 0 12px #00d4ff; opacity: 0.7; }
+}
