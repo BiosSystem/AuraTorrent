@@ -1,0 +1,34 @@
+version: 2
+updates:
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    groups:
+      all:
+        patterns:
+        - '*'
+
+  # Maintain dependencies for npm
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    groups:
+      env:
+        patterns:
+        - '*node*'
+        - '*vite*'
+      lint:
+        patterns:
+        - '*eslint*'
+        - '*prettier*'
+      framework:
+        patterns:
+        - '@vue/*'
+        - '*vue*'
+        - '*vuetify*'
+        - '*pinia*'
+      patch:
+        update-types: ["patch"]
