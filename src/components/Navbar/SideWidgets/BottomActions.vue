@@ -3,6 +3,8 @@ import { computed } from 'vue'
 import { toast } from 'vue3-toastify'
 import ConnectionStatusDialog from '@/components/Dialogs/ConnectionStatusDialog.vue'
 import StatsDialog from '@/components/Dialogs/StatsDialog.vue'
+import BandwidthSchedulerDialog from '@/components/Dialogs/BandwidthSchedulerDialog.vue'
+import ThemeLabDialog from '@/components/Dialogs/ThemeLabDialog.vue'
 import { useI18nUtils } from '@/composables'
 import { ConnectionStatus } from '@/constants/qbit'
 import { ThemeMode } from '@/constants/vuetorrent'
@@ -90,6 +92,14 @@ function openStatsDialog() {
   dialogStore.createDialog(StatsDialog)
 }
 
+function openBandwidthSchedulerDialog() {
+  dialogStore.createDialog(BandwidthSchedulerDialog)
+}
+
+function openThemeLabDialog() {
+  dialogStore.createDialog(ThemeLabDialog)
+}
+
 function openConfirmShutdownDialog() {
   dialogStore.confirmAction({
     title: t('dialogs.shutdown.title'),
@@ -155,7 +165,24 @@ function openConfirmShutdownDialog() {
       </v-tooltip>
     </v-col>
   </v-row>
-  <v-row v-if="vueTorrentStore.isShutdownButtonVisible" no-gutters>
+  <v-row no-gutters class="mt-2">
+    <v-col class="d-flex justify-center">
+      <v-tooltip text="Bandwidth Scheduler" location="top">
+        <template #activator="{ props }">
+          <v-btn variant="plain" icon="mdi-calendar-clock" color="accent" v-bind="props" @click="openBandwidthSchedulerDialog" />
+        </template>
+      </v-tooltip>
+    </v-col>
+
+    <v-col class="d-flex justify-center">
+      <v-tooltip text="AuraTheme Engine Lab" location="top">
+        <template #activator="{ props }">
+          <v-btn variant="plain" icon="mdi-palette-advanced" color="primary" v-bind="props" @click="openThemeLabDialog" />
+        </template>
+      </v-tooltip>
+    </v-col>
+  </v-row>
+  <v-row v-if="vueTorrentStore.isShutdownButtonVisible" no-gutters class="mt-2">
     <v-col class="d-flex justify-center">
       <v-tooltip :text="t('navbar.side.bottom_actions.shutdown')" location="top">
         <template #activator="{ props }">
