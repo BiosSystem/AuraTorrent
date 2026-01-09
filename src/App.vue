@@ -5,6 +5,7 @@ import { toast } from 'vue3-toastify'
 import AddPanel from './components/AddPanel.vue'
 import AddTorrentDialog from './components/Dialogs/AddTorrentDialog.vue'
 import DnDZone from './components/DnDZone.vue'
+import SpeedTicker from './components/SpeedTicker.vue'
 import Navbar from './components/Navbar/Navbar.vue'
 import Sidebar from './components/Navbar/Sidebar.vue'
 import { useBackendSync, useI18nUtils } from './composables'
@@ -231,6 +232,7 @@ watchEffect(() => {
     </v-main>
     <AddPanel v-if="appStore.isAuthenticated" />
     <DnDZone />
+    <SpeedTicker v-if="appStore.isAuthenticated" />
   </v-app>
 </template>
 
