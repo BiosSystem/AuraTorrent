@@ -8,7 +8,6 @@ const props = defineProps<{
 }>()
 
 const dialogStore = useDialogStore()
-const vueTorrentStore = useVueTorrentStore()
 
 const accentColor = ref('#00ff72')
 const blurRadius = ref(16)
@@ -29,7 +28,7 @@ function saveTheme() {
   }
   localStorage.setItem('aura_custom_theme', JSON.stringify(themeConfig))
   toast.success('Theme applied and saved!')
-  dialogStore.destroyDialog(props.guid)
+  dialogStore.deleteDialog(props.guid)
 }
 
 function exportTheme() {
@@ -50,13 +49,13 @@ function exportTheme() {
 </script>
 
 <template>
-  <v-dialog :model-value="true" max-width="500" @update:model-value="dialogStore.destroyDialog(props.guid)">
+  <v-dialog :model-value="true" max-width="500" @update:model-value="dialogStore.deleteDialog(props.guid)">
     <v-card class="theme-lab-dialog">
       <v-card-title class="d-flex align-center text-primary">
         <v-icon icon="mdi-palette-advanced" class="mr-2" />
         AuraTheme Engine Lab
         <v-spacer />
-        <v-btn icon="mdi-close" variant="text" @click="dialogStore.destroyDialog(props.guid)" />
+        <v-btn icon="mdi-close" variant="text" @click="dialogStore.deleteDialog(props.guid)" />
       </v-card-title>
       
       <v-card-text>
@@ -105,7 +104,7 @@ function exportTheme() {
       <v-card-actions>
         <v-btn variant="text" prepend-icon="mdi-export" @click="exportTheme">Export</v-btn>
         <v-spacer />
-        <v-btn variant="text" @click="dialogStore.destroyDialog(props.guid)">Cancel</v-btn>
+        <v-btn variant="text" @click="dialogStore.deleteDialog(props.guid)">Cancel</v-btn>
         <v-btn color="primary" variant="tonal" @click="saveTheme">Save Theme</v-btn>
       </v-card-actions>
     </v-card>
