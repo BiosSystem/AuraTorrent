@@ -33,7 +33,7 @@ onMounted(() => {
 function saveSchedule() {
   localStorage.setItem('aura_bandwidth_schedule', JSON.stringify(schedule.value))
   toast.success('Bandwidth schedule saved!')
-  dialogStore.destroyDialog(props.guid)
+  dialogStore.deleteDialog(props.guid)
 }
 
 function handleMousedown(dayIdx: number, hourIdx: number) {
@@ -54,13 +54,13 @@ function handleMouseup() {
 </script>
 
 <template>
-  <v-dialog :model-value="true" max-width="800" @update:model-value="dialogStore.destroyDialog(props.guid)">
+  <v-dialog :model-value="true" max-width="800" @update:model-value="dialogStore.deleteDialog(props.guid)">
     <v-card class="schedule-dialog" @mouseup="handleMouseup" @mouseleave="handleMouseup">
       <v-card-title class="d-flex align-center">
         <v-icon icon="mdi-calendar-clock" class="mr-2" color="accent" />
         Bandwidth Scheduling Matrix
         <v-spacer />
-        <v-btn icon="mdi-close" variant="text" @click="dialogStore.destroyDialog(props.guid)" />
+        <v-btn icon="mdi-close" variant="text" @click="dialogStore.deleteDialog(props.guid)" />
       </v-card-title>
       
       <v-card-text>
@@ -96,7 +96,7 @@ function handleMouseup() {
       
       <v-card-actions>
         <v-spacer />
-        <v-btn variant="text" @click="dialogStore.destroyDialog(props.guid)">Cancel</v-btn>
+        <v-btn variant="text" @click="dialogStore.deleteDialog(props.guid)">Cancel</v-btn>
         <v-btn color="accent" variant="tonal" @click="saveSchedule">Save Schedule</v-btn>
       </v-card-actions>
     </v-card>
