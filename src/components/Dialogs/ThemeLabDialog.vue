@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useDialogStore, useVueTorrentStore } from '@/stores'
+import { useDialogStore } from '@/stores'
 import { toast } from 'vue3-toastify'
 
 const props = defineProps<{
