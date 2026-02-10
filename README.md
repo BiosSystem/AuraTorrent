@@ -12,26 +12,27 @@
   <img src="https://img.shields.io/github/v/release/BiosSystem/AuraTorrent?color=00ff72&style=flat-square" alt="Version">
   <img src="https://img.shields.io/badge/qBittorrent-4.4%2B-blue?style=flat-square" alt="qBittorrent">
   <img src="https://img.shields.io/github/license/BiosSystem/AuraTorrent?style=flat-square" alt="License">
+  <img src="https://img.shields.io/github/stars/BiosSystem/AuraTorrent?style=flat-square&color=00ff72" alt="Stars">
 </p>
 
 ---
 
-**AuraTorrent** is a beautiful, lightning-fast Open Source WebUI for qBittorrent. Built on Vue 3 and Vite, it reimagines the seedbox experience with dynamic scheduling, real-time telemetry HUDs, and deep customization. 
+**AuraTorrent** is a beautiful, lightning-fast open-source WebUI for qBittorrent. Built on Vue 3 and Vite, it reimagines the seedbox experience with dynamic scheduling, real-time telemetry HUDs, and deep customization.
 
 <p align="center">
-  <img src="https://cdn.jsdelivr.net/gh/BiosSystem/AuraTorrent@master/docs/screenshots/screenshot-desktop-dark-mode.png" width="800" alt="Screenshot Desktop" />
+  <img src="docs/screenshots/screenshot-desktop-dark-mode.png" width="800" alt="AuraTorrent Desktop Screenshot" />
 </p>
 
 ## ✨ Why It's Unique
 
 Unlike standard qBittorrent WebUIs, AuraTorrent includes next-gen features designed for power users:
 
-- **Bandwidth Scheduling Matrix**: A 7×24 visual heatmap grid to paint your bandwidth schedule visually. The UI automatically throttles qBittorrent based on the current hour.
-- **AuraTheme Engine**: A live, built-in CSS variable editor. Adjust glassmorphism blur, neon glow intensity, and accent colors in real-time, then export to JSON.
-- **Global Speed Ticker**: Press `Ctrl+Shift+T` anywhere to summon a floating, always-on-top HUD sparkline graph of your current I/O speeds.
-- **The B-I-O-S Easter Egg**: Type `B-I-O-S` on your keyboard to unlock the BiosSystem Kernel Diagnostic HUD.
+- **Bandwidth Scheduling Matrix** — A 7×24 visual heatmap grid to paint your bandwidth schedule visually. The UI automatically throttles qBittorrent based on the current hour.
+- **AuraTheme Engine** — A live, built-in CSS variable editor. Adjust glassmorphism blur, neon glow intensity, and accent colors in real-time, then export to JSON.
+- **Global Speed Ticker** — Press `Ctrl+Shift+T` anywhere to summon a floating, always-on-top HUD sparkline graph of your current I/O speeds.
+- **B-I-O-S Easter Egg** — Type `B-I-O-S` on your keyboard to unlock the BiosSystem Kernel Diagnostic HUD.
 
-## 🎯 Feature Matrix
+## 📊 Feature Matrix
 
 | Feature | AuraTorrent | VueTorrent | Default UI |
 |---|:---:|:---:|:---:|
@@ -39,31 +40,27 @@ Unlike standard qBittorrent WebUIs, AuraTorrent includes next-gen features desig
 | **Multi-Daemon Switcher** | ✅ | ❌ | ❌ |
 | **Visual Bandwidth Heatmap** | ✅ | ❌ | ❌ |
 | **Live Theme Editor Lab** | ✅ | ❌ | ❌ |
+| **Speed Ticker HUD** | ✅ | ❌ | ❌ |
 
-## 📦 Platform Device Matrix
-
-AuraTorrent is responsive across all devices and installs directly into qBittorrent without additional daemons.
+## 🖥️ Platform Support
 
 | Platform | Support | Notes |
 |---|:---:|---|
-| **Windows / macOS / Linux** | 🟢 Native | Works in any modern desktop browser (Chrome, Edge, Firefox, Safari). |
-| **iOS / iPadOS** | 🟢 PWA | Add to Home Screen for a native app-like experience without App Store limits. |
-| **Android** | 🟢 PWA | Install via Chrome. Handles `magnet:` links directly. |
-| **Docker / Seedboxes** | 🟢 Supported | Drop the files into your container's WebUI folder or mount via volume. |
+| **Windows / macOS / Linux** | ✅ Native | Works in any modern desktop browser. |
+| **iOS / iPadOS** | ✅ PWA | Add to Home Screen for a native app-like experience. |
+| **Android** | ✅ PWA | Install via Chrome. Handles `magnet:` links directly. |
+| **Docker / Seedboxes** | ✅ Supported | Mount into your container's WebUI folder. |
 
 ## 🚀 Quick Start
-
-Drop this into your terminal to download and extract the latest release:
 
 ```bash
 wget https://github.com/BiosSystem/AuraTorrent/releases/latest/download/auratorrent.zip
 unzip auratorrent.zip -d /path/to/qbittorrent/webui
 ```
-Then, in qBittorrent: Go to `Options -> WebUI`, check **Use alternative Web UI**, and point it to the `/path/to/qbittorrent/webui` folder.
 
-## 🛠️ Full Developer Setup
+Then in qBittorrent: go to `Options → WebUI`, check **Use alternative Web UI**, and point it to the folder.
 
-To build from source or contribute:
+## 🛠️ Developer Setup
 
 ```bash
 git clone https://github.com/BiosSystem/AuraTorrent.git
@@ -72,12 +69,16 @@ npm install
 npm run dev
 ```
 
-## 🏛️ Attribution & Credits
+## 📖 Documentation
 
-AuraTorrent builds upon the extraordinary open-source PWA foundation of **VueTorrent**. We honor and attribute the core architecture to **WDaan** and the VueTorrent contributor community.
+Full documentation is available in the **[Wiki](https://github.com/BiosSystem/AuraTorrent/wiki)**.
+
+## 🙏 Attribution & Credits
+
+AuraTorrent builds upon the open-source PWA foundation of **VueTorrent**. We honor and attribute the core architecture to **WDaan** and the VueTorrent contributor community.
 
 - **Original Repository**: [VueTorrent](https://github.com/VueTorrent/VueTorrent)
 - **License**: GPL-3.0
 
 ---
-*Crafted with passion for the Open Source community by BiosSystem.*
+*Copyright © 2026 BiosSystem | Powered by BiosSystem Kernel*
