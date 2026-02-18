@@ -33,17 +33,19 @@ async function login() {
 }
 
 function redirectOnSuccess() {
-  if (route.query.redirect) {
-    void router.push(route.query.redirect as string)
+  const redirect = route.query.redirect as string | undefined
+  // Only allow relative paths — reject absolute URLs and protocol-relative paths
+  // to prevent open redirect attacks (e.g. ?redirect=https://evil.com)
+  if (redirect && redirect.startsWith('/') && !redirect.startsWith('//')) {
+    void router.push(redirect)
   } else {
     void router.push({ name: 'dashboard' })
   }
 }
 
-onMounted(async () => {
-  if (route.query.username && route.query.password) {
-    await appStore.login(route.query.username as string, route.query.password as string)
-  }
+onMounted(() => {
+  // Auto-login via URL query params (?username=&password=) was removed —
+  // credentials in URLs are stored in browser history and server access logs.
 })
 
 watchEffect(() => {
