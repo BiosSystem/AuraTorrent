@@ -103,7 +103,7 @@ function resetSettings() {
 }
 
 function downloadSettings() {
-  const settings = localStorage.getItem('vuetorrent_webuiSettings')
+  const settings = localStorage.getItem('webuiSettings')
   if (!settings) {
     toast.warn(t('toast.export.no_settings'))
     return
