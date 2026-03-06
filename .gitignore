@@ -34,3 +34,6 @@ auratorrent-demo/**
 docker/**
 coverage/
 config/
+
+# Local BiosSystem internal docs (never publish)
+docs/BIOSYSTEM_DELTA_FROM_UPSTREAM.md
