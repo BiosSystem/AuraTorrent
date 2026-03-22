@@ -170,7 +170,7 @@ body,
 }
 
 .v-list-item:hover {
-  background: rgba(0, 212, 255, 0.07) !important;
+  background: rgba(0, 255, 114, 0.07) !important;
   transform: translateX(3px);
 }
 
@@ -178,10 +178,7 @@ body,
    TYPOGRAPHY UTILITIES
    ───────────────────────────────────────────────────────────── */
 .text-accent {
-  background: linear-gradient(135deg, #00d4ff 0%, #7c3aed 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #00ff72 !important;
   font-weight: 700;
 }
 
@@ -193,7 +190,7 @@ body,
    PROGRESS BARS — accent gradient
    ───────────────────────────────────────────────────────────── */
 .v-progress-linear__determinate {
-  background: linear-gradient(90deg, #00d4ff 0%, #7c3aed 100%) !important;
+  background: linear-gradient(90deg, #00ff72 0%, #00b84f 100%) !important;
   border-radius: 8px;
 }
 
