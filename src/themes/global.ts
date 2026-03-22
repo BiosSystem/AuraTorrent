@@ -8,7 +8,7 @@ export const statusColors = {
 export function getVariables(dark: boolean) {
   return {
     // Main colors
-    accent: '#00F0FF',
+    accent: '#00FF72',
     upload: '#7928CA',
     ratio: '#0070F3',
     category: '#6B46C1',
