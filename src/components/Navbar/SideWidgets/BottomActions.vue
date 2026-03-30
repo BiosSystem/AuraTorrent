@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { toast } from 'vue3-toastify'
+import BandwidthSchedulerDialog from '@/components/Dialogs/BandwidthSchedulerDialog.vue'
 import ConnectionStatusDialog from '@/components/Dialogs/ConnectionStatusDialog.vue'
 import StatsDialog from '@/components/Dialogs/StatsDialog.vue'
-import BandwidthSchedulerDialog from '@/components/Dialogs/BandwidthSchedulerDialog.vue'
 import ThemeLabDialog from '@/components/Dialogs/ThemeLabDialog.vue'
 import { useI18nUtils } from '@/composables'
 import { ConnectionStatus } from '@/constants/qbit'

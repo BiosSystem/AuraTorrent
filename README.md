@@ -20,7 +20,13 @@
 **AuraTorrent** is a beautiful, lightning-fast open-source WebUI for qBittorrent. Built on Vue 3 and Vite, it reimagines the seedbox experience with dynamic scheduling, real-time telemetry HUDs, and deep customization.
 
 <p align="center">
-  <img src="docs/screenshots/screenshot-desktop-dark-mode.png" width="800" alt="AuraTorrent Desktop Screenshot" />
+  <img src="https://raw.githubusercontent.com/BiosSystem/AuraTorrent/master/docs/screenshots/frame01.png" width="800" alt="AuraTorrent Dashboard Overview" />
+</p>
+
+---
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/BiosSystem/AuraTorrent/master/docs/screenshots/frame02.png" width="800" alt="AuraTorrent Dropdown & Theming" />
 </p>
 
 ## ✨ Why It's Unique
@@ -32,15 +38,19 @@ Unlike standard qBittorrent WebUIs, AuraTorrent includes next-gen features desig
 - **Global Speed Ticker** — Press `Ctrl+Shift+T` anywhere to summon a floating, always-on-top HUD sparkline graph of your current I/O speeds.
 - **B-I-O-S Easter Egg** — Type `B-I-O-S` on your keyboard to unlock the BiosSystem Kernel Diagnostic HUD.
 
-## 📊 Feature Matrix
+## 📊 Feature Matrix Comparison
 
-| Feature | AuraTorrent | VueTorrent | Default UI |
-|---|:---:|:---:|:---:|
-| **Mobile PWA Support** | ✅ | ✅ | ❌ |
-| **Multi-Daemon Switcher** | ✅ | ❌ | ❌ |
-| **Visual Bandwidth Heatmap** | ✅ | ❌ | ❌ |
-| **Live Theme Editor Lab** | ✅ | ❌ | ❌ |
-| **Speed Ticker HUD** | ✅ | ❌ | ❌ |
+Here is how **AuraTorrent** stacks up against the competition in the qBittorrent WebUI ecosystem.
+
+| Feature | AuraTorrent | VueTorrent | Flood | Default UI |
+|---|:---:|:---:|:---:|:---:|
+| **Modern Neon Glassmorphism UI** | ✅ | ❌ | ❌ | ❌ |
+| **Mobile Responsive (PWA)** | ✅ | ✅ | ✅ | ❌ |
+| **Telegram Companion Bot (AuraBot)**| ✅ | ❌ | ❌ | ❌ |
+| **Live Theme Editor Lab** | ✅ | ❌ | ❌ | ❌ |
+| **Multi-Daemon Switcher** | ✅ | ❌ | ❌ | ❌ |
+| **Visual Bandwidth Heatmap** | ✅ | ❌ | ❌ | ❌ |
+| **Global Speed Ticker HUD** | ✅ | ❌ | ❌ | ❌ |
 
 ## 🖥️ Platform Support
 
