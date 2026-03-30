@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
+import { useDisplay } from 'vuetify'
 import Header from './Header.vue'
 import TableTorrent from './TableTorrent.vue'
 import TableComponent from '@/components/Core/TableComponent.vue'
@@ -23,8 +24,6 @@ defineEmits<{
   startPress: [e: TouchEvent, torrent: TorrentType]
   endPress: []
 }>()
-
-import { useDisplay } from 'vuetify'
 
 const { t, getTorrentStateString } = useI18nUtils()
 const { mobile } = useDisplay()

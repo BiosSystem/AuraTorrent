@@ -57,7 +57,13 @@ watchEffect(() => {
 
 <template>
   <v-container class="fill-height d-flex justify-center align-center">
-    <v-card class="mx-auto pa-4 elevation-10" rounded="xl" min-width="320" max-width="450" width="100%" style="background: rgba(var(--v-theme-surface), 0.8); backdrop-filter: blur(10px);">
+    <v-card
+      class="mx-auto pa-4 elevation-10"
+      rounded="xl"
+      min-width="320"
+      max-width="450"
+      width="100%"
+      style="background: rgba(var(--v-theme-surface), 0.8); backdrop-filter: blur(10px)">
       <div class="text-center mb-4">
         <v-card-title class="text-h4 font-weight-bold text-accent">{{ t('login.title') }}</v-card-title>
         <v-card-subtitle class="text-h6 mt-1">{{ t('login.subtitle') }}</v-card-subtitle>

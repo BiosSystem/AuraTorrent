@@ -292,6 +292,7 @@ export default defineConfig(({ mode }) => {
     test: {
       environment: 'jsdom',
       globals: true,
+      exclude: ['node_modules', 'dist', 'tests/e2e/**'],
       setupFiles: [resolve(__dirname, 'tests/setup.ts')],
       coverage: {
         reportsDirectory: './tests/unit/coverage',

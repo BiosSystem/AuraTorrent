@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useDialogStore } from '@/stores'
 import { toast } from 'vue3-toastify'
+import { useDialogStore } from '@/stores'
 
 const props = defineProps<{
   guid: string
@@ -24,7 +24,7 @@ function saveTheme() {
   const themeConfig = {
     accent: accentColor.value,
     blur: blurRadius.value,
-    glow: glowIntensity.value
+    glow: glowIntensity.value,
   }
   localStorage.setItem('aura_custom_theme', JSON.stringify(themeConfig))
   toast.success('Theme applied and saved!')
@@ -35,7 +35,7 @@ function exportTheme() {
   const themeConfig = {
     accent: accentColor.value,
     blur: blurRadius.value,
-    glow: glowIntensity.value
+    glow: glowIntensity.value,
   }
   const blob = new Blob([JSON.stringify(themeConfig, null, 2)], { type: 'application/json' })
   const url = URL.createObjectURL(blob)
@@ -57,50 +57,27 @@ function exportTheme() {
         <v-spacer />
         <v-btn icon="mdi-close" variant="text" @click="dialogStore.deleteDialog(props.guid)" />
       </v-card-title>
-      
+
       <v-card-text>
-        <v-color-picker
-          v-model="accentColor"
-          hide-canvas
-          hide-inputs
-          show-swatches
-          class="mb-4"
-          @update:model-value="applyTheme"
-        ></v-color-picker>
+        <v-color-picker v-model="accentColor" hide-canvas hide-inputs show-swatches class="mb-4" @update:model-value="applyTheme"></v-color-picker>
 
         <div class="text-caption mb-1">Glassmorphism Blur Radius</div>
-        <v-slider
-          v-model="blurRadius"
-          min="0"
-          max="40"
-          step="1"
-          thumb-label
-          @update:model-value="applyTheme"
-        >
-          <template v-slot:append>
+        <v-slider v-model="blurRadius" min="0" max="40" step="1" thumb-label @update:model-value="applyTheme">
+          <template #append>
             <span class="text-caption">{{ blurRadius }}px</span>
           </template>
         </v-slider>
-        
+
         <div class="text-caption mb-1">Neon Glow Intensity</div>
-        <v-slider
-          v-model="glowIntensity"
-          min="0"
-          max="100"
-          step="1"
-          thumb-label
-          @update:model-value="applyTheme"
-        >
-          <template v-slot:append>
+        <v-slider v-model="glowIntensity" min="0" max="100" step="1" thumb-label @update:model-value="applyTheme">
+          <template #append>
             <span class="text-caption">{{ glowIntensity }}%</span>
           </template>
         </v-slider>
 
-        <v-alert type="info" variant="tonal" class="mt-4" density="compact">
-          AuraTheme changes are applied in real-time. Export as JSON to share with the community!
-        </v-alert>
+        <v-alert type="info" variant="tonal" class="mt-4" density="compact"> AuraTheme changes are applied in real-time. Export as JSON to share with the community! </v-alert>
       </v-card-text>
-      
+
       <v-card-actions>
         <v-btn variant="text" prepend-icon="mdi-export" @click="exportTheme">Export</v-btn>
         <v-spacer />

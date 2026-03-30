@@ -5,8 +5,8 @@ import { useRouter } from 'vue-router'
 import ActiveFilters from './TopWidgets/ActiveFilters.vue'
 import TopContainer from './TopWidgets/TopContainer.vue'
 import TorrentSearchbar from '@/components/TorrentSearchbar.vue'
-import { useNavbarStore, useAppStore } from '@/stores'
 import qbit from '@/services/qbit'
+import { useNavbarStore, useAppStore } from '@/stores'
 
 const router = useRouter()
 const appStore = useAppStore()
@@ -76,13 +76,7 @@ onUnmounted(() => {
       <v-icon size="14" class="ml-1">mdi-chevron-down</v-icon>
 
       <div v-if="switcherOpen" class="daemon-menu">
-        <div
-          v-for="(server, idx) in servers"
-          :key="idx"
-          class="daemon-menu__item"
-          :class="{ 'daemon-menu__item--active': idx === activeServer }"
-          @click.stop="selectServer(idx)"
-        >
+        <div v-for="(server, idx) in servers" :key="idx" class="daemon-menu__item" :class="{ 'daemon-menu__item--active': idx === activeServer }" @click.stop="selectServer(idx)">
           <span class="daemon-menu__dot" :class="idx === activeServer ? 'daemon-menu__dot--active' : ''" />
           {{ server.label }}
         </div>
@@ -116,7 +110,9 @@ onUnmounted(() => {
   background: rgba(8, 12, 26, 0.97);
   border: 1px solid rgba(0, 212, 255, 0.22);
   border-radius: 14px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0,212,255,0.06);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(0, 212, 255, 0.06);
   backdrop-filter: blur(20px);
   overflow: hidden;
   z-index: 9999;
@@ -130,9 +126,11 @@ onUnmounted(() => {
   padding: 10px 16px;
   font-size: 0.85rem;
   font-weight: 500;
-  color: rgba(255,255,255,0.7);
+  color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
 
   &:hover {
     background: rgba(0, 212, 255, 0.08);
@@ -149,7 +147,7 @@ onUnmounted(() => {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.25);
+  background: rgba(255, 255, 255, 0.25);
   flex-shrink: 0;
 
   &--active {
@@ -159,7 +157,13 @@ onUnmounted(() => {
 }
 
 @keyframes menuFadeIn {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>
