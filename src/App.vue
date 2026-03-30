@@ -5,9 +5,9 @@ import { toast } from 'vue3-toastify'
 import AddPanel from './components/AddPanel.vue'
 import AddTorrentDialog from './components/Dialogs/AddTorrentDialog.vue'
 import DnDZone from './components/DnDZone.vue'
-import SpeedTicker from './components/SpeedTicker.vue'
 import Navbar from './components/Navbar/Navbar.vue'
 import Sidebar from './components/Navbar/Sidebar.vue'
+import SpeedTicker from './components/SpeedTicker.vue'
 import { useBackendSync, useI18nUtils } from './composables'
 import { TitleOptions } from './constants/vuetorrent'
 import { formatPercent, formatSpeed } from './helpers'
@@ -111,10 +111,7 @@ onMounted(() => {
     if (keyBuffer.toLowerCase() === 'bios') {
       keyBuffer = ''
       showBiosHud.value = !showBiosHud.value
-      toast[showBiosHud.value ? 'success' : 'info'](
-        showBiosHud.value ? '⚡ BiosSystem Kernel HUD — Active' : 'HUD Dismissed',
-        { toastId: 'bios-hud', autoClose: 2000 }
-      )
+      toast[showBiosHud.value ? 'success' : 'info'](showBiosHud.value ? '⚡ BiosSystem Kernel HUD — Active' : 'HUD Dismissed', { toastId: 'bios-hud', autoClose: 2000 })
     }
   })
 
@@ -186,7 +183,7 @@ watchEffect(() => {
 <template>
   <v-app class="text-noselect">
     <component :is="dialog.component" v-for="dialog in dialogStore.dialogs.values()" :key="dialog.guid" v-bind="{ guid: dialog.guid, ...dialog.props }" />
-    
+
     <Transition name="bios-fade">
       <div v-if="showBiosHud" class="bios-diagnostic-hud" @click="showBiosHud = false">
         <div class="bios-hud-scanline" />
@@ -264,13 +261,7 @@ watchEffect(() => {
 .bios-hud-scanline {
   position: absolute;
   inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 3px,
-    rgba(0, 0, 0, 0.12) 3px,
-    rgba(0, 0, 0, 0.12) 4px
-  );
+  background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0, 0, 0, 0.12) 3px, rgba(0, 0, 0, 0.12) 4px);
   pointer-events: none;
   border-radius: 18px;
 }
@@ -325,9 +316,15 @@ watchEffect(() => {
   font-weight: 600;
   color: #00ff72;
 
-  &--ok { color: #00ff72; }
-  &--dl { color: #00d4ff; }
-  &--ul { color: #a78bfa; }
+  &--ok {
+    color: #00ff72;
+  }
+  &--dl {
+    color: #00d4ff;
+  }
+  &--ul {
+    color: #a78bfa;
+  }
 }
 
 .bios-hud-footer {
@@ -340,7 +337,9 @@ watchEffect(() => {
 
 .bios-fade-enter-active,
 .bios-fade-leave-active {
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 .bios-fade-enter-from,
 .bios-fade-leave-to {
@@ -349,12 +348,24 @@ watchEffect(() => {
 }
 
 @keyframes biosPulse {
-  from { box-shadow: 0 0 24px rgba(0, 255, 102, 0.15), 0 24px 60px rgba(0,0,0,0.7); }
-  to   { box-shadow: 0 0 50px rgba(0, 255, 102, 0.35), 0 24px 60px rgba(0,0,0,0.7); }
+  from {
+    box-shadow:
+      0 0 24px rgba(0, 255, 102, 0.15),
+      0 24px 60px rgba(0, 0, 0, 0.7);
+  }
+  to {
+    box-shadow:
+      0 0 50px rgba(0, 255, 102, 0.35),
+      0 24px 60px rgba(0, 0, 0, 0.7);
+  }
 }
 
 @keyframes badgeSpin {
-  0%   { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
