@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { onMounted, onBeforeUnmount, ref, watch } from 'vue'
+import { formatSpeed } from '@/helpers'
 import { useMaindataStore } from '@/stores/maindata'
 import { useVueTorrentStore } from '@/stores/vuetorrent'
-import { formatSpeed } from '@/helpers'
 
 const maindataStore = useMaindataStore()
 const { serverState } = storeToRefs(maindataStore)
@@ -23,21 +23,25 @@ function handleKeydown(e: KeyboardEvent) {
   }
 }
 
-watch(() => serverState.value, (state) => {
-  if (!isVisible.value) return
-  
-  const dl = state?.dl_info_speed ?? 0
-  const ul = state?.up_info_speed ?? 0
-  
-  dlHistory.value.shift()
-  dlHistory.value.push(dl)
-  
-  ulHistory.value.shift()
-  ulHistory.value.push(ul)
-  
-  const currentMax = Math.max(...dlHistory.value, ...ulHistory.value, 1)
-  maxSpeed.value = currentMax
-}, { deep: true })
+watch(
+  () => serverState.value,
+  state => {
+    if (!isVisible.value) return
+
+    const dl = state?.dl_info_speed ?? 0
+    const ul = state?.up_info_speed ?? 0
+
+    dlHistory.value.shift()
+    dlHistory.value.push(dl)
+
+    ulHistory.value.shift()
+    ulHistory.value.push(ul)
+
+    const currentMax = Math.max(...dlHistory.value, ...ulHistory.value, 1)
+    maxSpeed.value = currentMax
+  },
+  { deep: true }
+)
 
 onMounted(() => {
   window.addEventListener('keydown', handleKeydown)
@@ -52,12 +56,14 @@ function getPath(data: number[]) {
   const width = 200
   const height = 40
   const stepX = width / (GRAPH_SIZE - 1)
-  
-  return data.map((val, i) => {
-    const x = i * stepX
-    const y = height - (val / maxSpeed.value) * height
-    return `${i === 0 ? 'M' : 'L'} ${x} ${y}`
-  }).join(' ')
+
+  return data
+    .map((val, i) => {
+      const x = i * stepX
+      const y = height - (val / maxSpeed.value) * height
+      return `${i === 0 ? 'M' : 'L'} ${x} ${y}`
+    })
+    .join(' ')
 }
 </script>
 
@@ -67,7 +73,7 @@ function getPath(data: number[]) {
       <div class="ticker-header">
         <span class="ticker-title">⚡ AURA TICKER</span>
       </div>
-      
+
       <div class="ticker-stats">
         <div class="stat-col">
           <div class="stat-label dl-label">↓ DL</div>
@@ -78,14 +84,14 @@ function getPath(data: number[]) {
           <div class="stat-value">{{ formatSpeed(serverState?.up_info_speed ?? 0, useBitSpeed) }}</div>
         </div>
       </div>
-      
+
       <div class="ticker-graph-container">
         <svg class="ticker-svg" viewBox="0 0 200 40" preserveAspectRatio="none">
           <path :d="getPath(dlHistory)" class="dl-path" fill="none" stroke-width="2" />
           <path :d="getPath(ulHistory)" class="ul-path" fill="none" stroke-width="2" />
         </svg>
       </div>
-      
+
       <div class="ticker-hint">Ctrl+Shift+T to dismiss</div>
     </div>
   </Transition>
@@ -134,8 +140,12 @@ function getPath(data: number[]) {
   letter-spacing: 1px;
 }
 
-.dl-label { color: #00d4ff; }
-.ul-label { color: #a78bfa; }
+.dl-label {
+  color: #00d4ff;
+}
+.ul-label {
+  color: #a78bfa;
+}
 
 .stat-value {
   font-size: 0.9rem;
@@ -156,8 +166,12 @@ function getPath(data: number[]) {
   height: 100%;
 }
 
-.dl-path { stroke: #00d4ff; }
-.ul-path { stroke: #a78bfa; }
+.dl-path {
+  stroke: #00d4ff;
+}
+.ul-path {
+  stroke: #a78bfa;
+}
 
 .ticker-hint {
   font-size: 0.6rem;
@@ -168,7 +182,9 @@ function getPath(data: number[]) {
 
 .ticker-fade-enter-active,
 .ticker-fade-leave-active {
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
 .ticker-fade-enter-from,
