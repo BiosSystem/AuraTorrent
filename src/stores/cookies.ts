@@ -1,0 +1,62 @@
+import { defineStore } from 'pinia'
+import { shallowRef, triggerRef } from 'vue'
+import { useTask } from 'vue-concurrency'
+import qbit from '@/services/qbit'
+import { Cookie } from '@/types/vuetorrent'
+
+export const useCookieStore = defineStore('cookies', () => {
+  const cookies = shallowRef<Cookie[]>([])
+
+  const cookiesFetchTask = useTask(function* () {
+    yield fetchCookies()
+  }).drop()
+
+  async function fetchCookies() {
+    cookies.value = (await qbit.getCookies()).map(cookie => new Cookie(cookie))
+  }
+
+  async function syncCookies() {
+    await qbit.setCookies(cookies.value)
+    cookiesFetchTask.perform()
+  }
+
+  async function addCookie(cookie: Cookie, syncData: boolean = false) {
+    cookies.value.push(cookie)
+    if (syncData) {
+      await syncCookies()
+      triggerRef(cookies)
+    }
+  }
+
+  async function removeCookie(cookie: Cookie, syncData: boolean = false) {
+    cookies.value = cookies.value.filter(c => !c.equals(cookie))
+    if (syncData) {
+      await syncCookies()
+      triggerRef(cookies)
+    }
+  }
+
+  async function clearCookies(syncData: boolean = false) {
+    cookies.value = []
+    if (syncData) {
+      await syncCookies()
+    }
+  }
+
+  async function importCookies(cookies: Cookie[], syncData: boolean = false) {
+    const cookiePromise = Promise.all(cookies.map(cookie => removeCookie(cookie).then(() => addCookie(cookie))))
+    if (syncData) {
+      return cookiePromise.then(() => syncCookies())
+    }
+    return cookiePromise
+  }
+
+  return {
+    cookies,
+    cookiesFetchTask,
+    addCookie,
+    removeCookie,
+    clearCookies,
+    importCookies,
+  }
+})
