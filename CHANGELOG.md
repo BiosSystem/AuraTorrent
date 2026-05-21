@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.1](https://github.com/BiosSystem/AuraTorrent/compare/v1.3.0...v1.3.1) (2026-05-21)
+
+
+### Bug Fixes
+
+* correct dialogStore deleteDialog and unused variables ([b19419d](https://github.com/BiosSystem/AuraTorrent/commit/b19419d767c44041bcc1f738965da9ae2b249184))
+* remove useVueTorrentStore import from ThemeLabDialog ([44d47af](https://github.com/BiosSystem/AuraTorrent/commit/44d47afcad7981552b4b4179a04e86ea50a06291))
+
 ## [1.1.0](https://github.com/BiosSystem/AuraTorrent/compare/v1.0.0...v1.1.0) (2026-05-17)
 
 
