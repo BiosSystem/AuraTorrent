@@ -42,3 +42,8 @@ Since forking from VueTorrent, the BiosSystem core team has performed comprehens
 * **Vulnerability**: Multi-layered JS dependency chains contained known high-severity vulnerabilities (e.g. CVEs in utility packages).
 * **Remediation**: Updated key dependencies (including updating `js-cookie` from `3.0.5` to `3.0.7`) and locked versions to maintain a strict `npm audit` report of zero vulnerabilities.
 
+### 5. Telegram Companion Bot Access Controls (AuraBot Authentication)
+* **Vulnerability**: Unauthenticated control of seedboxes via Telegram bots can lead to remote arbitrary downloads, deletion of content, or data exposure if any user on Telegram can message the bot.
+* **Remediation**: Implemented the `ALLOWED_USERS` strict whitelist check at the dispatcher level for all commands (`/start`, `/status`, `/add_user`). Restricts administrative operations (like `/add_user`) exclusively to the primary owner (`ALLOWED_USERS[0]`), preventing unauthorized control of the seedbox daemon.
+
+
