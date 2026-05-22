@@ -15,6 +15,10 @@
   <img src="https://img.shields.io/github/stars/BiosSystem/AuraTorrent?style=flat-square&color=00ff72" alt="Stars">
 </p>
 
+<p align="center">
+  <strong>🌐 Part of the <a href="https://bios-system.net">BiosSystem Suite</a></strong>
+</p>
+
 ---
 
 **AuraTorrent** is a beautiful, lightning-fast open-source WebUI for qBittorrent. Built on Vue 3 and Vite, it reimagines the seedbox experience with dynamic scheduling, real-time telemetry HUDs, and deep customization.
