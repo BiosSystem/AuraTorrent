@@ -105,5 +105,14 @@ AuraTorrent builds upon the open-source PWA foundation of **VueTorrent**. We hon
 - **Original Repository**: [VueTorrent](https://github.com/VueTorrent/VueTorrent)
 - **License**: GPL-3.0
 
+## 🔒 Security Fixes & Information
+
+AuraTorrent is built with safety and code integrity in mind:
+- **Zero-Vulnerability Baseline**: Regularly audited dependencies to ensure `npm audit` reports 0 vulnerabilities.
+- **Strict WebUI Sandboxing**: Enforces restricted API communications and secure CORS configurations.
+- **Upstream Parity Security Fixes**: Integrates upstream patches directly from verified VueTorrent pull requests.
+
+For detailed security policies, reporting guidelines, and contact information, please refer to our [Security Policy](SECURITY.md).
+
 ---
 *Copyright © 2026 BiosSystem | Powered by BiosSystem Kernel*
