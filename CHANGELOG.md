@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/BiosSystem/AuraTorrent/compare/v1.3.0...v1.4.0) (2026-05-22)
+
+
+### Features
+
+* complete UI overhaul, AuraBot, and E2E automation ([f33cf46](https://github.com/BiosSystem/AuraTorrent/commit/f33cf465b3a7971b4b2c9007763d101654bc8414))
+
 ## [1.1.0](https://github.com/BiosSystem/AuraTorrent/compare/v1.0.0...v1.1.0) (2026-05-17)
 
 
