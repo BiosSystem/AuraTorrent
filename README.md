@@ -25,27 +25,27 @@
 
 <p align="center">
   <h3>⚡ WebUI Overview & Torrent Dashboard</h3>
-  <img src="https://raw.githubusercontent.com/BiosSystem/AuraTorrent/master/docs/screenshots/auratorrent_overview.png" width="800" alt="AuraTorrent Overview" />
+  <img src="docs/screenshots/auratorrent_overview.png" width="800" alt="AuraTorrent Overview" />
 </p>
 
 <p align="center">
   <h3>📅 Bandwidth Scheduler Heatmap Matrix</h3>
-  <img src="https://raw.githubusercontent.com/BiosSystem/AuraTorrent/master/docs/screenshots/auratorrent_scheduler.png" width="800" alt="Bandwidth Scheduler Heatmap" />
+  <img src="docs/screenshots/auratorrent_scheduler.png" width="800" alt="Bandwidth Scheduler Heatmap" />
 </p>
 
 <p align="center">
   <h3>🎨 ThemeLab CSS customization Engine</h3>
-  <img src="https://raw.githubusercontent.com/BiosSystem/AuraTorrent/master/docs/screenshots/auratorrent_themelab.png" width="800" alt="ThemeLab CSS customization" />
+  <img src="docs/screenshots/auratorrent_themelab.png" width="800" alt="ThemeLab CSS customization" />
 </p>
 
 <p align="center">
   <h3>📈 Speed Ticker HUD (Sparkline Speeds overlay)</h3>
-  <img src="https://raw.githubusercontent.com/BiosSystem/AuraTorrent/master/docs/screenshots/auratorrent_speedticker.png" width="800" alt="Speed Ticker HUD" />
+  <img src="docs/screenshots/auratorrent_speedticker.png" width="800" alt="Speed Ticker HUD" />
 </p>
 
 <p align="center">
   <h3>🖥️ B-I-O-S Kernel Diagnostic Overlay</h3>
-  <img src="https://raw.githubusercontent.com/BiosSystem/AuraTorrent/master/docs/screenshots/auratorrent_easteregg.png" width="800" alt="BiosSystem Kernel Diagnostic Overlay" />
+  <img src="docs/screenshots/auratorrent_easteregg.png" width="800" alt="BiosSystem Kernel Diagnostic Overlay" />
 </p>
 
 ## ✨ Why It's Unique
