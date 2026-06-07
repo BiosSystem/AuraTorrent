@@ -21,7 +21,7 @@ Only the active release branch and tags under the BiosSystem namespace are suppo
 
 If you discover a security vulnerability in AuraTorrent or its companion bot, please report it immediately. To protect the seedboxes and environments of our users, **do not open a public issue on GitHub**.
 
-* **Email**: Send detailed vulnerability reports to `security@bios_system.io`.
+* **Email**: Send detailed vulnerability reports to `security@bios-system.net`.
 * **Response SLA**:
   * **Acknowledgement**: Within 24 hours.
   * **Remediation Plan**: Within 3 business days.
