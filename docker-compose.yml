@@ -9,10 +9,11 @@ services:
       - UMASK_SET=022
       - TZ=Europe/London
       - WEBUI_PORT=8080
-      - DOCKER_MODS=ghcr.io/vuetorrent/vuetorrent-lsio-mod:latest
     volumes:
       - ./docker/config:/config
       - ./docker/downloads:/downloads
+      # Mount AuraTorrent build output (run 'npm run build' first)
+      - ./dist:/auratorrent:ro
     ports:
       - '8080:8080'
       - '6881:6881'

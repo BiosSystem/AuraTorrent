@@ -12,6 +12,19 @@ load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 ALLOWED_USERS = [int(u.strip()) for u in os.getenv("ALLOWED_USERS", "").split(",") if u.strip()]
+
+# Load persisted allowed users if file exists
+if os.path.exists("allowed_users.txt"):
+    try:
+        with open("allowed_users.txt", "r") as f:
+            for line in f:
+                stripped = line.strip()
+                if stripped.isdigit():
+                    uid = int(stripped)
+                    if uid not in ALLOWED_USERS:
+                        ALLOWED_USERS.append(uid)
+    except Exception as e:
+        pass
 QBITTORRENT_URL = os.getenv("QBITTORRENT_URL", "http://localhost:8080")
 QBITTORRENT_USER = os.getenv("QBITTORRENT_USER", "admin")
 QBITTORRENT_PASS = os.getenv("QBITTORRENT_PASS", "adminadmin")
@@ -30,7 +43,10 @@ dp = Dispatcher()
 known_torrents = {}
 
 def is_allowed(user_id: int) -> bool:
-    return not ALLOWED_USERS or user_id in ALLOWED_USERS
+    if not ALLOWED_USERS:
+        logger.warning(f"Blocked unauthorized command from user {user_id}: ALLOWED_USERS is empty or unset in environment.")
+        return False
+    return user_id in ALLOWED_USERS
 
 async def get_qbittorrent_session():
     """Authenticate and return an aiohttp session for qBittorrent."""
@@ -138,8 +154,12 @@ async def cmd_add_user(message: Message):
     new_user = int(parts[1])
     if new_user not in ALLOWED_USERS:
         ALLOWED_USERS.append(new_user)
-        # Ideally, we should save this to .env or a database, but we will keep it in memory for now
-        await message.reply(f"✅ Added user ID: {new_user}")
+        try:
+            with open("allowed_users.txt", "a") as f:
+                f.write(f"{new_user}\n")
+        except Exception as e:
+            logger.error(f"Error saving to allowed_users.txt: {e}")
+        await message.reply(f"✅ Added user ID: {new_user} (persisted)")
     else:
         await message.reply(f"User {new_user} is already allowed.")
 
