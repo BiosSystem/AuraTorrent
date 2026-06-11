@@ -125,7 +125,7 @@ jobs:
         run: zip -qq -r ./auratorrent.zip ./auratorrent
 
       - name: Upload release asset
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ needs.setup-release.outputs.tag_name }}
           files: ./auratorrent.zip
