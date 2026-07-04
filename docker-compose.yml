@@ -12,8 +12,9 @@ services:
     volumes:
       - ./docker/config:/config
       - ./docker/downloads:/downloads
-      # Mount AuraTorrent build output (run 'npm run build' first)
-      - ./dist:/auratorrent:ro
+      # Mount AuraTorrent build output (run 'npm run build' first).
+      # Vite emits the web root to ./auratorrent/public.
+      - ./auratorrent/public:/auratorrent:ro
     ports:
       - '8080:8080'
       - '6881:6881'
