@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.5.0](https://github.com/BiosSystem/AuraTorrent/compare/v1.4.0...v1.5.0) (2026-07-04)
+
+### Features
+
+* containerize the Telegram bot with a Dockerfile and a compose service
+* publish a runnable nginx-served container image to ghcr.io/biossystem/auratorrent
+* run end-to-end, bot unit, and dependency audit checks in CI on every pull request
+
+### Bug Fixes
+
+* reuse qBittorrent session in the bot — was re-authenticating every poll cycle
+* escape torrent names as HTML to prevent injection into Telegram alert messages
+* fix owner detection falling back safely when ALLOWED_USERS is empty
+* point the container image and compose volume mount at the correct build output path
+
+### Security
+
+* clear 3 high-severity and 3 other npm dependency advisories (undici, vite, form-data, dompurify, js-yaml, @babel/core)
+* enforce npm audit as a hard CI gate on every pull request
+
 ## [1.4.0](https://github.com/BiosSystem/AuraTorrent/compare/v1.3.0...v1.4.0) (2026-05-22)
 
 
