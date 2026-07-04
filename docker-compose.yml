@@ -18,3 +18,20 @@ services:
       - '8080:8080'
       - '6881:6881'
       - '6881:6881/udp'
+
+  # Telegram companion bot (AuraBot). Copy bot/.env.example to bot/.env first.
+  aurabot:
+    build: ./bot
+    container_name: aurabot
+    restart: unless-stopped
+    depends_on:
+      - qbit
+    env_file:
+      - ./bot/.env
+    environment:
+      # Reach qBittorrent over the compose network instead of localhost
+      - QBITTORRENT_URL=http://qbit:8080
+      # Persist the dynamically added allowed-users list in the mounted volume
+      - ALLOWED_USERS_FILE=/app/data/allowed_users.txt
+    volumes:
+      - ./docker/aurabot:/app/data
