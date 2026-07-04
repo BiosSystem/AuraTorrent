@@ -1,7 +1,7 @@
 {
   "name": "auratorrent",
   "private": true,
-  "version": "1.4.0",
+  "version": "1.5.0",
   "type": "module",
   "description": "A beautiful, lightning-fast Open Source WebUI for qBittorrent, crafted with passion by Bios System",
   "author": "Bios System <kernel@biossystem.org>",
