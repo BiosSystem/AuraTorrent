@@ -35,5 +35,16 @@ docker/**
 coverage/
 config/
 
+# Test & build artifacts
+playwright-report/
+test-results/
+
+# Python (Telegram bot)
+__pycache__/
+*.py[cod]
+.pytest_cache/
+bot/.env
+bot/allowed_users.txt
+
 # Local BiosSystem internal docs (never publish)
 docs/BIOSYSTEM_DELTA_FROM_UPSTREAM.md
