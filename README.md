@@ -134,6 +134,38 @@ Open `Options → WebUI`, check **Use alternative Web UI**, and point it to the 
 
 **Step 4.** Reload your browser and enjoy AuraTorrent.
 
+## 🐳 Docker
+
+Run the whole stack — qBittorrent plus AuraTorrent's static build — with Docker Compose:
+
+```bash
+npm run build          # produce ./dist for qBittorrent to serve
+docker compose up -d
+```
+
+Prefer a standalone, nginx-served container? Pull the published image:
+
+```bash
+docker pull ghcr.io/biossystem/auratorrent:latest
+docker run -p 8000:80 ghcr.io/biossystem/auratorrent:latest
+```
+
+## 🤖 Telegram Companion Bot (AuraBot)
+
+AuraBot pushes download-complete and error alerts to Telegram and answers `/status` on demand.
+
+**Step 1.** Configure it:
+```bash
+cd bot
+cp .env.example .env   # set BOT_TOKEN, ALLOWED_USERS, and OWNER_ID
+```
+
+**Step 2.** Run it — either directly or via the `aurabot` service in `docker-compose.yml`:
+```bash
+pip install -r requirements.txt
+python main.py
+```
+
 ## 🛠️ Developer Setup
 
 **Step 1.** Clone the repository:
@@ -169,7 +201,7 @@ AuraTorrent builds upon the open-source PWA foundation of **VueTorrent**. We hon
 
 AuraTorrent is built with safety and code integrity in mind:
 
-- **Zero-Vulnerability Baseline** - Regularly audited dependencies to ensure `npm audit` reports 0 vulnerabilities.
+- **Enforced Dependency Audit** - CI runs `npm audit` on every pull request and fails the build on any high-severity finding, keeping the dependency tree clean.
 - **Strict WebUI Sandboxing** - Enforces restricted API communications and secure CORS configurations.
 - **Upstream Parity Security Fixes** - Integrates upstream patches directly from verified VueTorrent pull requests.
 
