@@ -6,6 +6,7 @@ import { defineConfig, loadEnv } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import vuetify from 'vite-plugin-vuetify'
 import ViteFonts from 'unplugin-fonts/vite'
+import AutoImport from 'unplugin-auto-import/vite'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -51,6 +52,17 @@ export default defineConfig(({ mode }) => {
       'process.env': {},
     },
     plugins: [
+      AutoImport({
+        imports: [
+          'vue',
+          'vue-router',
+          'pinia',
+          '@vueuse/core'
+        ],
+        dts: 'src/auto-imports.d.ts',
+        dirs: ['src/composables', 'src/stores'],
+        vueTemplate: true,
+      }),
       vue(),
       vuetify(),
       ViteFonts({
