@@ -8,6 +8,7 @@ interface Props {
   icon: string
   orientation?: 'row' | 'column'
   color?: string
+  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
   value: T | T[]
 }
 
