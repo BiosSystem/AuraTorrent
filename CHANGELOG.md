@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.6.0](https://github.com/BiosSystem/AuraTorrent/compare/v1.5.1...v1.6.0) (2026-07-10)
+
+### Features & DX Modernization
+* implement native global Command Palette (`Cmd/Ctrl+K`) for rapid navigation (zero dependencies).
+* integrate `unplugin-auto-import` for Vue composition API, radically improving Developer Experience.
+
 ## [1.5.1](https://github.com/BiosSystem/AuraTorrent/compare/v1.5.0...v1.5.1) (2026-07-10)
 
 ### Performance
