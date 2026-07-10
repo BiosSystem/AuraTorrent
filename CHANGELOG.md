@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.1](https://github.com/BiosSystem/AuraTorrent/compare/v1.5.0...v1.5.1) (2026-07-10)
+
+### Performance
+
+* implement GitHub Actions caching for Playwright browsers in `test.yml` to accelerate E2E tests
+* resolve double-build redundancy by configuring Docker layer caching (`type=gha`) in release pipelines
+* adopt Rolldown native minifier in Vite 8, removing the legacy `esbuild` dependency
+
 ## [1.5.0](https://github.com/BiosSystem/AuraTorrent/compare/v1.4.0...v1.5.0) (2026-07-04)
 
 ### Features

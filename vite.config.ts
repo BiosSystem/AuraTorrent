@@ -16,7 +16,7 @@ export default defineConfig(({ mode }) => {
     base: './',
     build: {
       target: 'esnext',
-      minify: 'esbuild',
+      minify: true,
       cssMinify: 'lightningcss',
       sourcemap: false,
       outDir: mode === 'demo' ? './vuetorrent-demo' : './auratorrent/public',
