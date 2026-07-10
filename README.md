@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Share+Tech+Mono&weight=bold&size=34&duration=3000&pause=1000&color=00FF72&center=true&vCenter=true&width=435&lines=AuraTorrent;Next-Gen+WebUI;BiosSystem+Kernel" alt="AuraTorrent Typing Title" />
+  <img src="https://readme-typing-svg.herokuapp.com?font=Share+Tech+Mono&weight=bold&size=34&duration=3000&pause=1000&color=00FF72&center=true&vCenter=true&width=435&lines=AuraTorrent;Next-Gen+WebUI;BiosSystem+Kernel" alt="AuraTorrent Typing Title" />
 </p>
 
 <p align="center">
