@@ -2,6 +2,13 @@
 
 ## [1.6.0](https://github.com/BiosSystem/AuraTorrent/compare/v1.5.1...v1.6.0) (2026-07-10)
 
+
+### Features
+
+* integrate command palette and auto-imports ([c7c030c](https://github.com/BiosSystem/AuraTorrent/commit/c7c030c8c5bd60a0e8b1d2d59b657fae12c45c3d))
+
+## [1.6.0](https://github.com/BiosSystem/AuraTorrent/compare/v1.5.1...v1.6.0) (2026-07-10)
+
 ### Features & DX Modernization
 * implement native global Command Palette (`Cmd/Ctrl+K`) for rapid navigation (zero dependencies).
 * integrate `unplugin-auto-import` for Vue composition API, radically improving Developer Experience.
