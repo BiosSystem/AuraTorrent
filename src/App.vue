@@ -4,6 +4,7 @@ import { onBeforeMount, onMounted, ref, watch, watchEffect, onBeforeUnmount } fr
 import { toast } from 'vue3-toastify'
 import AddPanel from './components/AddPanel.vue'
 import AddTorrentDialog from './components/Dialogs/AddTorrentDialog.vue'
+import CommandPalette from './components/Core/CommandPalette.vue'
 import DnDZone from './components/DnDZone.vue'
 import Navbar from './components/Navbar/Navbar.vue'
 import Sidebar from './components/Navbar/Sidebar.vue'
@@ -230,6 +231,7 @@ watchEffect(() => {
     <AddPanel v-if="appStore.isAuthenticated" />
     <DnDZone />
     <SpeedTicker v-if="appStore.isAuthenticated" />
+    <CommandPalette v-if="appStore.isAuthenticated" />
   </v-app>
 </template>
 
