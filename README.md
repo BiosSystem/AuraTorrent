@@ -61,6 +61,7 @@ graph TB
         THEME["ThemeLab Engine"]
         SCHED["Bandwidth Scheduler"]
         TICKER["Speed Ticker HUD"]
+        CMD["Command Palette"]
     end
 
     subgraph API["qBittorrent API"]
@@ -83,6 +84,7 @@ graph TB
     SCHED --> MATRIX
     MATRIX --> REST
     TICKER --> STORE
+    CMD --> ROUTER
     BOT --> REST
 ```
 
@@ -91,6 +93,7 @@ graph TB
 Unlike standard qBittorrent WebUIs, AuraTorrent includes next-gen features designed for power users:
 
 - **Bandwidth Scheduling Matrix** - A 7x24 visual heatmap grid to paint your bandwidth schedule visually. The UI automatically throttles qBittorrent based on the current hour.
+- **Global Command Palette** - Press `Cmd/Ctrl + K` to instantly jump to specific settings, perform actions, or search torrents without touching the mouse.
 - **AuraTheme Engine** - A live, built-in CSS variable editor. Adjust glassmorphism blur, neon glow intensity, and accent colors in real-time, then export to JSON.
 - **Global Speed Ticker** - Press `Ctrl+Shift+T` anywhere to summon a floating, always-on-top HUD sparkline graph of your current I/O speeds.
 - **B-I-O-S Easter Egg** - Type `B-I-O-S` on your keyboard to unlock the BiosSystem Kernel Diagnostic HUD.
