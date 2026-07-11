@@ -112,6 +112,29 @@ Below is an in-depth breakdown of the security refactoring and vulnerability pat
 * **Remediation**:
   Performed multiple audit runs and upgraded packages to their secure baselines. For example, `js-cookie` was upgraded from `3.0.5` to `3.0.7` to prevent prototype pollution vectors. The project is maintained at a strict target of `0` vulnerabilities on npm audits.
 
+### 6. Content Security Policy and Response Header Hardening (v1.7.0)
+* **Target File**: `nginx.conf`, `Dockerfile`
+* **Vulnerability & Threat Vector**:
+  The published container image served the built assets with nginx's bare defaults: no `Content-Security-Policy`, no `X-Frame-Options`, no `X-Content-Type-Options`. A stored or reflected XSS anywhere in the SPA (torrent names, tracker URLs, RSS content) had no browser-side containment, and the WebUI could be framed by a third-party origin for clickjacking.
+* **Remediation**:
+  Added a dedicated `nginx.conf` served by the container's `serve` stage, restricting script and connection origins to `'self'`, disabling framing from other origins, and setting `X-Content-Type-Options: nosniff` and a restrictive `Permissions-Policy`. `worker-src` and `manifest-src` are explicitly allowed for `'self'` so the PWA service worker and manifest keep working under the policy.
+* **Deployment Note**:
+  If `VITE_QBITTORRENT_TARGET` points at a different origin than the one serving the UI, `connect-src` in `nginx.conf` must be widened to include it, or requests will be blocked by the browser.
+
+### 7. Telegram Bot Rate Limiting and Unauthorized Access Alerting (v1.7.0)
+* **Target File**: `bot/main.py`
+* **Vulnerability & Threat Vector**:
+  Command handlers had no rate limit. A user with a valid Telegram account, allowed or not, could send commands in a tight loop, driving repeated calls against the qBittorrent API or flooding application logs with rejected-access entries with no operator visibility.
+* **Remediation**:
+  Added a per-user sliding-window rate limiter (`RATE_LIMIT_MAX` commands per `RATE_LIMIT_WINDOW` seconds, default 5 per 10) applied to every command handler through a `guarded` decorator. Unauthorized attempts are now logged with the user id and username and trigger a throttled Telegram alert to the bot owner (`UNAUTHORIZED_ALERT_COOLDOWN`, default 300 seconds, prevents alert flooding from a persistent attacker). `/start` no longer confirms the bot's identity to unauthorized users, removing an enumeration signal.
+
+### 8. Supply Chain Integrity (v1.7.0)
+* **Target Files**: `.github/workflows/*.yml`
+* **Vulnerability & Threat Vector**:
+  Workflows referenced third-party GitHub Actions by mutable version tags (e.g. `@v6`) and one by a mutable branch (`@main`). A compromised upstream action repository could push malicious code to that tag or branch and have it run in CI with `packages: write` and `contents: write` permissions without any change to this repository.
+* **Remediation**:
+  All actions across every workflow are now pinned to a specific commit SHA, with the original version kept as a trailing comment for readability. Added `actions/dependency-review-action` as a required PR check that fails on high-severity vulnerable or newly disallowed dependencies. The published container image is now signed keylessly with `cosign` and accompanied by an SPDX SBOM (`anchore/sbom-action`), attested to the image digest, so the image's provenance and contents can be verified with `cosign verify`.
+
 ---
 
 ## Secure Deployment Guidelines
