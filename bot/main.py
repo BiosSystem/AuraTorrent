@@ -182,7 +182,7 @@ class QBittorrentClient:
                     if resp.status == 200:
                         return await resp.json()
                     if resp.status == 403 and attempt == 0:
-                        # Cookie expired — re-authenticate and retry once.
+                        # Cookie expired, re-authenticate and retry once.
                         if not await self.login():
                             return None
                         continue
