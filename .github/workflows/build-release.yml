@@ -89,6 +89,18 @@ jobs:
           git tag -f latest_nightly
           git push -f origin latest_nightly
 
+      - name: Zip AuraTorrent
+        run: zip -qq -r ./auratorrent.zip ./auratorrent
+
+      - name: Create or update nightly release
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
+        with:
+          name: AuraTorrent Nightly Build
+          tag_name: latest_nightly
+          body: "Latest automated nightly build from the `master` branch."
+          prerelease: true
+          files: ./auratorrent.zip
+
   publish-release:
     name: Publish GitHub release
     if: startsWith(github.ref, 'refs/tags/v')
@@ -125,6 +137,11 @@ jobs:
           tag_name: ${{ github.ref_name }}
           body_path: release-notes.md
           files: ./auratorrent.zip
+
+      - name: Send release to Discord Webhook
+        uses: VueTorrent/release-to-discord@73f93c14b659270d21f78621420463479f446862 # main
+        with:
+          webhook_url: ${{ secrets.WEBHOOK_URL }}
 
   push-release:
     name: Push to latest-release branch
