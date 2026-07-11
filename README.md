@@ -139,7 +139,7 @@ Open `Options → WebUI`, check **Use alternative Web UI**, and point it to the 
 
 ## 🐳 Docker
 
-Run the whole stack — qBittorrent plus AuraTorrent's static build — with Docker Compose:
+Run the whole stack (qBittorrent plus AuraTorrent's static build) with Docker Compose:
 
 ```bash
 npm run build          # produce ./dist for qBittorrent to serve
@@ -163,7 +163,7 @@ cd bot
 cp .env.example .env   # set BOT_TOKEN, ALLOWED_USERS, and OWNER_ID
 ```
 
-**Step 2.** Run it — either directly or via the `aurabot` service in `docker-compose.yml`:
+**Step 2.** Run it, either directly or via the `aurabot` service in `docker-compose.yml`:
 ```bash
 pip install -r requirements.txt
 python main.py
