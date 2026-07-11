@@ -1,8 +1,11 @@
 import asyncio
+import functools
 import html
 import logging
 import os
-from typing import Optional
+import time
+from collections import defaultdict, deque
+from typing import Callable, Optional
 
 import aiohttp
 from aiogram import Bot, Dispatcher
@@ -41,6 +44,16 @@ QBITTORRENT_USER = os.getenv("QBITTORRENT_USER", "admin")
 QBITTORRENT_PASS = os.getenv("QBITTORRENT_PASS", "adminadmin")
 POLL_INTERVAL = int(os.getenv("POLL_INTERVAL", "10"))
 
+# Per-user command rate limit: at most RATE_LIMIT_MAX commands per
+# RATE_LIMIT_WINDOW seconds. Applies to allowed and rejected users alike, so a
+# compromised or misbehaving client cannot hammer the qBittorrent API or spam
+# unauthorized-access log lines.
+RATE_LIMIT_MAX = int(os.getenv("RATE_LIMIT_MAX", "5"))
+RATE_LIMIT_WINDOW = int(os.getenv("RATE_LIMIT_WINDOW", "10"))
+# Minimum seconds between repeated "unauthorized access" alerts sent to the
+# owner for the same user id, so a persistent attacker cannot spam the owner.
+UNAUTHORIZED_ALERT_COOLDOWN = int(os.getenv("UNAUTHORIZED_ALERT_COOLDOWN", "300"))
+
 # Dispatcher is created at import time; the Bot is created in main() so this
 # module can be imported (and unit-tested) without a valid token.
 dp = Dispatcher()
@@ -62,6 +75,67 @@ def is_allowed(user_id: int) -> bool:
         logger.warning(f"Blocked command from user {user_id}: ALLOWED_USERS is empty or unset.")
         return False
     return user_id in ALLOWED_USERS
+
+
+# Sliding-window timestamps of recent commands, keyed by Telegram user id.
+_command_times: dict[int, deque] = defaultdict(deque)
+# Last time an "unauthorized access" alert was sent to the owner, per user id.
+_last_unauthorized_alert: dict[int, float] = {}
+
+
+def is_rate_limited(user_id: int) -> bool:
+    """True if this user has exceeded RATE_LIMIT_MAX commands in the current window."""
+    now = time.monotonic()
+    times = _command_times[user_id]
+    while times and now - times[0] > RATE_LIMIT_WINDOW:
+        times.popleft()
+    if len(times) >= RATE_LIMIT_MAX:
+        return True
+    times.append(now)
+    return False
+
+
+async def _alert_owner_unauthorized(message: Message) -> None:
+    """Notify the owner of a rejected access attempt, throttled per user."""
+    user = message.from_user
+    now = time.monotonic()
+    last = _last_unauthorized_alert.get(user.id, 0.0)
+    if now - last < UNAUTHORIZED_ALERT_COOLDOWN:
+        return
+    _last_unauthorized_alert[user.id] = now
+
+    owner = owner_id()
+    if owner is None or bot is None:
+        return
+    username = f"@{user.username}" if user.username else "no username"
+    try:
+        await bot.send_message(
+            owner,
+            f"⛔ <b>Unauthorized access attempt</b>\nUser ID: <code>{user.id}</code> ({html.escape(username)})",
+            parse_mode="HTML",
+        )
+    except Exception as e:
+        logger.error(f"Failed to alert owner about unauthorized user {user.id}: {e}")
+
+
+def guarded(handler: Callable) -> Callable:
+    """Decorator applying auth, unauthorized-access alerting, and rate limiting
+    to a message handler, in that order, before it runs."""
+
+    @functools.wraps(handler)
+    async def wrapper(message: Message, *args, **kwargs):
+        user_id = message.from_user.id
+        if not is_allowed(user_id):
+            logger.warning(f"Rejected command from unauthorized user {user_id} ({message.from_user.username}).")
+            await _alert_owner_unauthorized(message)
+            return
+        if is_rate_limited(user_id):
+            logger.warning(f"Rate-limited user {user_id}: exceeded {RATE_LIMIT_MAX} commands / {RATE_LIMIT_WINDOW}s.")
+            await message.reply("⏳ Too many commands, please slow down.")
+            return
+        return await handler(message, *args, **kwargs)
+
+    return wrapper
 
 
 def _fmt_finished(name: str) -> str:
@@ -170,18 +244,14 @@ async def broadcast_message(text: str) -> None:
 
 
 @dp.message(Command("start"))
+@guarded
 async def cmd_start(message: Message):
-    if not is_allowed(message.from_user.id):
-        await message.reply("⛔ Unauthorized user.")
-        return
     await message.reply("🟢 AuraBot is active and monitoring qBittorrent!")
 
 
 @dp.message(Command("status"))
+@guarded
 async def cmd_status(message: Message):
-    if not is_allowed(message.from_user.id):
-        return
-
     torrents = await qbit.get_torrents()
     if torrents is None:
         await message.reply("🔴 Cannot connect to qBittorrent API.")
@@ -196,9 +266,21 @@ async def cmd_status(message: Message):
 
 @dp.message(Command("add_user"))
 async def cmd_add_user(message: Message):
-    """Owner command to add new users dynamically."""
+    """Owner command to add new users dynamically.
+
+    Deliberately not gated by is_allowed(): when ALLOWED_USERS is empty and no
+    OWNER_ID is set, owner_id() returns None and this becomes the bootstrap
+    command that registers the first user. Once an owner exists, only that
+    owner may use it. Still rate-limited to slow down id-guessing during the
+    open bootstrap window.
+    """
+    if is_rate_limited(message.from_user.id):
+        return
+
     owner = owner_id()
     if owner is not None and message.from_user.id != owner:
+        logger.warning(f"Rejected /add_user from non-owner user {message.from_user.id}.")
+        await _alert_owner_unauthorized(message)
         await message.reply("⛔ Only the primary owner can add users.")
         return
 

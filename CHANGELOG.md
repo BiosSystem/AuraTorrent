@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.7.0](https://github.com/BiosSystem/AuraTorrent/compare/v1.6.0...v1.7.0) (2026-07-11)
+
+### Security
+
+* serve the container image with a Content-Security-Policy and hardened response headers (`nginx.conf`)
+* rate limit Telegram bot commands per user and alert the bot owner on repeated unauthorized access attempts
+* pin every GitHub Action across all workflows to a commit SHA instead of a mutable tag or branch
+* add a required dependency review check on pull requests, failing on high-severity vulnerabilities
+* sign the published container image with cosign and attach an SPDX SBOM attestation to the image digest
+
+### Infrastructure
+
+* move to tag-driven releases and retire release-please, which required conventional-commit prefixes incompatible with this project's commit guidelines
+* fix the release workflow's demo build artifact path and add a version fallback when no tag is reachable
+
 ## [1.6.0](https://github.com/BiosSystem/AuraTorrent/compare/v1.5.1...v1.6.0) (2026-07-10)
 
 ### Features & DX Modernization
