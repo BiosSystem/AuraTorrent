@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.7.1](https://github.com/BiosSystem/AuraTorrent/compare/v1.7.0...v1.7.1) (2026-07-11)
+
+### Documentation
+
+* tidy up wording in the README and changelog
+
 ## [1.7.0](https://github.com/BiosSystem/AuraTorrent/compare/v1.6.0...v1.7.0) (2026-07-11)
 
 ### Security
@@ -39,7 +45,7 @@
 
 ### Bug Fixes
 
-* reuse qBittorrent session in the bot — was re-authenticating every poll cycle
+* reuse qBittorrent session in the bot, was re-authenticating every poll cycle
 * escape torrent names as HTML to prevent injection into Telegram alert messages
 * fix owner detection falling back safely when ALLOWED_USERS is empty
 * point the container image and compose volume mount at the correct build output path

@@ -34,7 +34,7 @@ async function login() {
 
 function redirectOnSuccess() {
   const redirect = route.query.redirect as string | undefined
-  // Only allow relative paths — reject absolute URLs and protocol-relative paths
+  // Only allow relative paths, reject absolute URLs and protocol-relative paths
   // to prevent open redirect attacks (e.g. ?redirect=https://evil.com)
   if (redirect && redirect.startsWith('/') && !redirect.startsWith('//')) {
     void router.push(redirect)
@@ -44,7 +44,7 @@ function redirectOnSuccess() {
 }
 
 onMounted(() => {
-  // Auto-login via URL query params (?username=&password=) was removed —
+  // Auto-login via URL query params (?username=&password=) was removed:
   // credentials in URLs are stored in browser history and server access logs.
 })
 
