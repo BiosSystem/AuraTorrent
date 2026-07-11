@@ -24,6 +24,11 @@ This document strictly tracks architectural deltas from upstream components and 
 *   **Security Context**: A mutable tag or branch reference (`@v6`, `@main`) lets a compromised upstream action run arbitrary code in CI with write permissions to this repository and its packages, with no diff on our side to review. Pinning to a SHA closes that gap. Signing and the SBOM let anyone verify the published image's provenance and contents with `cosign verify`.
 *   **Code Location**: `.github/workflows/*.yml`.
 
+### 5. CI/CD Pipeline Expansion (Nightly Builds & Webhooks)
+*   **Decision**: Removed fragmented `notify-release.yml` and directly integrated Discord webhook triggering into `build-release.yml`. Added automated `AuraTorrent Nightly Build` generation mapping to the `master` branch.
+*   **Reasoning**: Prevents silent failures of external notification workflows while providing an always-accessible, persistent GitHub Release asset for cutting-edge deployments without requiring stable tags.
+*   **Code Location**: `.github/workflows/build-release.yml`.
+
 ## [1.6.0] Modernization & DX (2026-07-10)
 
 ### 1. Command Palette Implementation
