@@ -60,7 +60,7 @@
 
 ### Features
 
-* complete UI overhaul, AuraBot, and E2E automation ([f33cf46](https://github.com/BiosSystem/AuraTorrent/commit/f33cf465b3a7971b4b2c9007763d101654bc8414))
+* rebuild the UI, add AuraBot, and add end-to-end test automation ([f33cf46](https://github.com/BiosSystem/AuraTorrent/commit/f33cf465b3a7971b4b2c9007763d101654bc8414))
 
 ---
 
