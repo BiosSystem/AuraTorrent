@@ -10,6 +10,7 @@ RUN npm run build
 # Vite emits the web root (index.html + assets) to ./auratorrent/public.
 FROM nginx:1.27-alpine AS serve
 COPY --from=build /app/auratorrent/public /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 
 # Stage 3: Export-only image containing just the static files, for mounting

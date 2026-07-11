@@ -54,3 +54,39 @@ def test_error_message_escapes_name_and_state():
     msg = bot._fmt_error("bad<name>", "error")
     assert "bad&lt;name&gt;" in msg
     assert "error" in msg
+
+
+def test_rate_limit_allows_up_to_max_commands():
+    bot.RATE_LIMIT_MAX = 3
+    bot.RATE_LIMIT_WINDOW = 10
+    bot._command_times.clear()
+    for _ in range(3):
+        assert bot.is_rate_limited(42) is False
+
+
+def test_rate_limit_blocks_after_max_commands():
+    bot.RATE_LIMIT_MAX = 3
+    bot.RATE_LIMIT_WINDOW = 10
+    bot._command_times.clear()
+    for _ in range(3):
+        bot.is_rate_limited(42)
+    assert bot.is_rate_limited(42) is True
+
+
+def test_rate_limit_is_isolated_per_user():
+    bot.RATE_LIMIT_MAX = 1
+    bot.RATE_LIMIT_WINDOW = 10
+    bot._command_times.clear()
+    assert bot.is_rate_limited(1) is False
+    assert bot.is_rate_limited(2) is False
+    assert bot.is_rate_limited(1) is True
+
+
+def test_rate_limit_window_expires_old_entries():
+    bot.RATE_LIMIT_MAX = 1
+    bot.RATE_LIMIT_WINDOW = 10
+    bot._command_times.clear()
+    assert bot.is_rate_limited(7) is False
+    # Simulate the window having elapsed by backdating the recorded timestamp.
+    bot._command_times[7][0] -= bot.RATE_LIMIT_WINDOW + 1
+    assert bot.is_rate_limited(7) is False
