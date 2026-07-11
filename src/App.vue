@@ -112,7 +112,7 @@ onMounted(() => {
     if (keyBuffer.toLowerCase() === 'bios') {
       keyBuffer = ''
       showBiosHud.value = !showBiosHud.value
-      toast[showBiosHud.value ? 'success' : 'info'](showBiosHud.value ? '⚡ BiosSystem Kernel HUD — Active' : 'HUD Dismissed', { toastId: 'bios-hud', autoClose: 2000 })
+      toast[showBiosHud.value ? 'success' : 'info'](showBiosHud.value ? '⚡ BiosSystem Kernel HUD: Active' : 'HUD Dismissed', { toastId: 'bios-hud', autoClose: 2000 })
     }
   })
 
@@ -219,7 +219,7 @@ watchEffect(() => {
             <span class="bios-hud-value">VUE 3 + VITE</span>
           </div>
         </div>
-        <div class="bios-hud-footer">BiosSystem Open Source Community — click to dismiss</div>
+        <div class="bios-hud-footer">BiosSystem Open Source Community, click to dismiss</div>
       </div>
     </Transition>
 
