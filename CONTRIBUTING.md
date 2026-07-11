@@ -35,6 +35,10 @@ npm run build
 node postbuild.cjs
 ```
 
+## Release Process
+
+Releases are tag-driven. Maintainers update `CHANGELOG.md` and the version in `package.json`, then push a `vX.Y.Z` tag. CI builds the release zip, publishes the GitHub release with the matching changelog section, updates the `latest-release` branch, and pushes a versioned container image to `ghcr.io/biossystem/auratorrent`.
+
 ## Scope Policy
 
 AuraTorrent is a frontend dashboard for qBittorrent / seedbox environments. Keep changes focused on:
