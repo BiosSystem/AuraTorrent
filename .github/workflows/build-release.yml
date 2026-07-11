@@ -32,7 +32,7 @@ jobs:
             artifact-path: ./auratorrent
           - npm-step: build-demo
             artifact-name: auratorrent-demo
-            artifact-path: ./auratorrent-demo
+            artifact-path: ./vuetorrent-demo
 
     steps:
       - name: Checkout repository
@@ -51,7 +51,7 @@ jobs:
 
       - name: Build AuraTorrent
         run: |
-          version=$(git describe --tags --exclude latest_nightly)
+          version=$(git describe --tags --exclude latest_nightly 2>/dev/null || node -p "require('./package.json').version")
           npm version --no-commit-hooks --no-git-tag-version --allow-same-version "$version"
           npm run ${{ matrix.npm-step }}
 
