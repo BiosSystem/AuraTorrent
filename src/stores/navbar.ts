@@ -1,5 +1,6 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useMaindataStore } from './maindata'
 import { useDisplay } from 'vuetify'
 
 const GRAPH_SIZE = 15
@@ -32,6 +33,16 @@ export const useNavbarStore = defineStore(
       _uploadData.value.shift()
       _uploadData.value.push(data ?? 0)
     }
+
+    const maindataStore = useMaindataStore()
+    watch(
+      () => maindataStore.serverState,
+      state => {
+        pushTimeData()
+        pushDownloadData(state?.dl_info_speed ?? 0)
+        pushUploadData(state?.up_info_speed ?? 0)
+      }
+    )
 
     return {
       isDrawerOpen,

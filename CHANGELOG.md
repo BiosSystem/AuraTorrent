@@ -1,6 +1,19 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+* **Architecture:** Decoupled Pinia state management. `maindataStore` no longer acts as a monolithic controller. Child stores (`categories`, `tags`, `torrents`, `trackers`, `navbar`, `dashboard`) now reactively subscribe to `maindataStore.rawPayload` and `serverState` via `watch()` for autonomous synchronization.
+* **Architecture:** Upgraded monolithic `catch (error: any)` block in main data synchronization loop to strict-typed `catch (error: unknown)` with explicit Axios boundaries.
+* **Architecture:** Formalized Python Bot state machine (`bot/main.py`) by replacing nested state transition `if/elif` logic with a strict `TorrentState` `str/Enum` mapping, increasing maintainability and testability.
+* **Architecture:** Enforced strict typing in Python Bot (`bot/main.py`) by replacing generic dict/list responses with `TypedDict` models (`TorrentData`), improving IDE DX and catching payload mutations.
+* **Network:** Integrated Vue Axios response interceptors for automatic retries of 4xx/5xx requests and timeouts in the frontend (`src/services/backend.ts`, `src/services/qbit/QbitProvider.ts`).
 ## [1.7.1](https://github.com/BiosSystem/AuraTorrent/compare/v1.7.0...v1.7.1) (2026-07-11)
+
+### Architecture & Reliability
+
+* implement robust API error interceptors with exponential backoff and retry mechanisms in the Vue frontend via `axios`
+* integrate `tenacity` into the Python bot for fault-tolerant network pooling and exponential backoff during `qBittorrent` connection drops
 
 ### Documentation
 

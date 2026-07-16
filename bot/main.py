@@ -5,7 +5,12 @@ import logging
 import os
 import time
 from collections import defaultdict, deque
-from typing import Callable, Optional
+from typing import Callable, Optional, List, TypedDict
+
+class TorrentData(TypedDict, total=False):
+    hash: str
+    name: str
+    state: str
 
 import aiohttp
 from aiogram import Bot, Dispatcher
@@ -59,8 +64,28 @@ UNAUTHORIZED_ALERT_COOLDOWN = int(os.getenv("UNAUTHORIZED_ALERT_COOLDOWN", "300"
 dp = Dispatcher()
 bot: Optional[Bot] = None
 
+from enum import Enum
+
+class TorrentState(str, Enum):
+    DOWNLOADING = "downloading"
+    UPLOADING = "uploading"
+    ERROR = "error"
+    MISSING_FILES = "missingFiles"
+    UNKNOWN = "unknown"
+
+    @classmethod
+    def _missing_(cls, value):
+        return cls.UNKNOWN
+
+def handle_transition(prev: TorrentState, new: TorrentState, name: str) -> Optional[str]:
+    if prev == TorrentState.DOWNLOADING and new == TorrentState.UPLOADING:
+        return _fmt_finished(name)
+    if new in (TorrentState.ERROR, TorrentState.MISSING_FILES):
+        return _fmt_error(name, new.value)
+    return None
+
 # Maps torrent hash -> last known state, used to detect transitions.
-known_torrents: dict = {}
+known_torrents: dict[str, TorrentState] = {}
 
 
 def owner_id() -> Optional[int]:
@@ -146,52 +171,69 @@ def _fmt_error(name: str, state: str) -> str:
     return f"⚠️ <b>Torrent Error:</b>\n<code>{html.escape(name)}</code>\nState: {html.escape(state)}"
 
 
+from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_exponential
+
+def _return_none_on_error(retry_state):
+    return None
+
+def _return_false_on_error(retry_state):
+    return False
+
 class QBittorrentClient:
     """Holds a single authenticated session and re-authenticates only on demand."""
 
     def __init__(self) -> None:
         self._session: Optional[aiohttp.ClientSession] = None
+        self._timeout = aiohttp.ClientTimeout(total=15)
 
     async def _ensure_session(self) -> aiohttp.ClientSession:
         if self._session is None or self._session.closed:
-            self._session = aiohttp.ClientSession()
+            self._session = aiohttp.ClientSession(timeout=self._timeout)
         return self._session
 
+    @retry(
+        retry=retry_if_exception_type((aiohttp.ClientError, asyncio.TimeoutError)),
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=2, max=10),
+        before_sleep=lambda rs: logger.warning(f"Connection error during login. Retrying... (Attempt {rs.attempt_number})"),
+        retry_error_callback=_return_false_on_error
+    )
     async def login(self) -> bool:
         """Authenticate against the qBittorrent API, storing the SID cookie."""
         session = await self._ensure_session()
         login_url = f"{QBITTORRENT_URL}/api/v2/auth/login"
         data = {"username": QBITTORRENT_USER, "password": QBITTORRENT_PASS}
-        try:
-            async with session.post(login_url, data=data) as resp:
-                if resp.status == 200:
-                    return True
-                logger.error(f"Login failed: {resp.status}")
-                return False
-        except aiohttp.ClientError as e:
-            logger.error(f"Connection error during login: {e}")
+        
+        async with session.post(login_url, data=data) as resp:
+            if resp.status == 200:
+                return True
+            logger.error(f"Login failed: {resp.status}")
             return False
 
-    async def get_torrents(self) -> Optional[list]:
+    @retry(
+        retry=retry_if_exception_type((aiohttp.ClientError, asyncio.TimeoutError)),
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=2, max=10),
+        before_sleep=lambda rs: logger.warning(f"Connection error fetching torrents. Retrying... (Attempt {rs.attempt_number})"),
+        retry_error_callback=_return_none_on_error
+    )
+    async def get_torrents(self) -> Optional[List[TorrentData]]:
         """Fetch the torrent list, re-authenticating once if the session expired."""
         session = await self._ensure_session()
         url = f"{QBITTORRENT_URL}/api/v2/torrents/info"
-        for attempt in range(2):
-            try:
-                async with session.get(url) as resp:
-                    if resp.status == 200:
-                        return await resp.json()
-                    if resp.status == 403 and attempt == 0:
-                        # Cookie expired, re-authenticate and retry once.
-                        if not await self.login():
-                            return None
-                        continue
-                    logger.error(f"Failed to fetch torrents: {resp.status}")
-                    return None
-            except aiohttp.ClientError as e:
-                logger.error(f"Connection error while fetching torrents: {e}")
+        
+        async with session.get(url) as resp:
+            if resp.status == 200:
+                return await resp.json()
+            if resp.status == 403:
+                # Cookie expired, re-authenticate and retry
+                logger.info("Session expired, forcing re-authentication.")
+                if await self.login():
+                    # Raise an exception to trigger the tenacity retry loop
+                    raise aiohttp.ClientError("Triggering retry after re-authentication")
                 return None
-        return None
+            logger.error(f"Failed to fetch torrents: {resp.status}")
+            return None
 
     async def close(self) -> None:
         if self._session and not self._session.closed:
@@ -214,15 +256,15 @@ async def poll_torrents() -> None:
 
             for t_hash, t_data in current_torrents.items():
                 name = t_data.get("name", "Unknown")
-                state = t_data.get("state", "unknown")
+                raw_state = t_data.get("state", "unknown")
+                state = TorrentState(raw_state)
 
                 if t_hash in known_torrents:
                     prev_state = known_torrents[t_hash]
                     if prev_state != state:
-                        if state == "uploading" and prev_state == "downloading":
-                            await broadcast_message(_fmt_finished(name))
-                        elif state in ("error", "missingFiles"):
-                            await broadcast_message(_fmt_error(name, state))
+                        msg = handle_transition(prev_state, state, name)
+                        if msg:
+                            await broadcast_message(msg)
 
                 known_torrents[t_hash] = state
 

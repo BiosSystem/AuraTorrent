@@ -19,7 +19,32 @@ class BackendProvider {
       headers: {
         put: { 'Content-Type': 'application/json' },
       },
+      timeout: 10000,
     })
+
+    this.axios.interceptors.response.use(
+      response => response,
+      async (error) => {
+        const config = error.config
+        
+        if (!config) {
+          return Promise.reject(error)
+        }
+        
+        config.retryCount = config.retryCount ?? 0
+        
+        const isNetworkError = error.code === 'ECONNABORTED' || error.message.includes('timeout') || error.message.includes('Network Error')
+        
+        if (isNetworkError && config.retryCount < 3) {
+          config.retryCount += 1
+          const delay = Math.pow(2, config.retryCount) * 1000
+          await new Promise(resolve => setTimeout(resolve, delay))
+          return this.axios(config)
+        }
+        
+        return Promise.reject(error)
+      }
+    )
   }
 
   /**
