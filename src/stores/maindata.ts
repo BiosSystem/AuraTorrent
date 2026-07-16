@@ -1,15 +1,10 @@
 import { useIntervalFn } from '@vueuse/core'
 import { acceptHMRUpdate, defineStore, storeToRefs } from 'pinia'
-import { ref, shallowRef, watch } from 'vue'
+import { ref, shallowRef } from 'vue'
 import { useTask } from 'vue-concurrency'
 import { toast } from 'vue3-toastify'
+import { isAxiosError } from 'axios'
 import { useAppStore } from './app'
-import { useCategoryStore } from './categories'
-import { useDashboardStore } from './dashboard'
-import { useNavbarStore } from './navbar'
-import { useTagStore } from './tags'
-import { useTorrentStore } from './torrents'
-import { useTrackerStore } from './trackers'
 import { useVueTorrentStore } from './vuetorrent'
 import qbit from '@/services/qbit'
 import { ServerState } from '@/types/qbit/models'
@@ -20,14 +15,9 @@ export const useMaindataStore = defineStore('maindata', () => {
   const serverState = shallowRef<Partial<ServerState>>()
   const reconnectAttempts = ref(0)
 
+  const rawPayload = shallowRef<any>()
+
   const appStore = useAppStore()
-  const categoryStore = useCategoryStore()
-  const dashboardStore = useDashboardStore()
-  const navbarStore = useNavbarStore()
-  const tagStore = useTagStore()
-  const torrentStore = useTorrentStore()
-  const { processedTorrents } = storeToRefs(torrentStore)
-  const trackerStore = useTrackerStore()
   const vueTorrentStore = useVueTorrentStore()
   const { refreshInterval } = storeToRefs(vueTorrentStore)
 
@@ -46,10 +36,6 @@ export const useMaindataStore = defineStore('maindata', () => {
     } else if (obj) {
       serverState.value = { ...serverState.value, ...obj }
     }
-
-    navbarStore.pushTimeData()
-    navbarStore.pushDownloadData(serverState.value?.dl_info_speed ?? 0)
-    navbarStore.pushUploadData(serverState.value?.up_info_speed ?? 0)
   }
 
   async function updateMaindata() {
@@ -62,25 +48,16 @@ export const useMaindataStore = defineStore('maindata', () => {
         reconnectAttempts.value = 0
       }
 
+      rawPayload.value = response
+
       if (isFullUpdate(response)) {
         syncFromMaindata(true, response.server_state)
-        categoryStore.syncFromMaindata(true, Object.entries(response.categories ?? {}))
-        tagStore.syncFromMaindata(true, response.tags ?? [])
-        torrentStore.syncFromMaindata(true, Object.entries(response.torrents ?? {}))
-        trackerStore.syncFromMaindata(true, Object.entries(response.trackers ?? {}))
         return
       }
 
       syncFromMaindata(false, response.server_state)
-      categoryStore.syncFromMaindata(false, Object.entries(response.categories ?? {}), response.categories_removed)
-      tagStore.syncFromMaindata(false, response.tags ?? [], response.tags_removed)
-      torrentStore.syncFromMaindata(false, Object.entries(response.torrents ?? {}), response.torrents_removed)
-      trackerStore.syncFromMaindata(false, Object.entries(response.trackers ?? {}), response.trackers_removed)
-
-      // filter out deleted torrents from selection
-      dashboardStore.selectedTorrents = dashboardStore.selectedTorrents.filter(hash => !response.torrents_removed?.includes(hash))
-    } catch (error: any) {
-      if (error?.response?.status === 403) {
+    } catch (error: unknown) {
+      if (isAxiosError(error) && error.response?.status === 403) {
         console.error('No longer authenticated, logging out...')
         await appStore.setAuthStatus(false)
         await vueTorrentStore.redirectToLogin()
@@ -94,11 +71,6 @@ export const useMaindataStore = defineStore('maindata', () => {
     }
   }
 
-  // filter out selected torrents outside of filters
-  watch(processedTorrents, torrents => {
-    const filteredHashes = torrents.map(torrent => torrent.hash)
-    dashboardStore.selectedTorrents = dashboardStore.selectedTorrents.filter(hash => filteredHashes.includes(hash))
-  })
 
   async function syncTorrentPeers(hash: string, rid?: number) {
     return await qbit.syncTorrentPeers(hash, rid)
@@ -127,6 +99,7 @@ export const useMaindataStore = defineStore('maindata', () => {
   return {
     rid,
     serverState,
+    rawPayload,
     syncTorrentPeers,
     addTorrentPeers,
     banPeers,

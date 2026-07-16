@@ -1,6 +1,7 @@
 import { acceptHMRUpdate, defineStore, storeToRefs } from 'pinia'
 import { computed, ref, watch } from 'vue'
 
+import { useMaindataStore } from './maindata'
 import { useTorrentStore } from './torrents'
 import { useVueTorrentStore } from './vuetorrent'
 import { useArrayPagination, useI18nUtils } from '@/composables'
@@ -110,6 +111,23 @@ export const useDashboardStore = defineStore(
         }
       }
     )
+
+    const maindataStore = useMaindataStore()
+    watch(
+      () => maindataStore.rawPayload,
+      payload => {
+        if (!payload) return
+        if (payload.torrents_removed) {
+          selectedTorrents.value = selectedTorrents.value.filter(hash => !payload.torrents_removed?.includes(hash))
+        }
+      }
+    )
+
+    // filter out selected torrents outside of filters
+    watch(processedTorrents, torrents => {
+      const filteredHashes = torrents.map(torrent => torrent.hash)
+      selectedTorrents.value = selectedTorrents.value.filter(hash => filteredHashes.includes(hash))
+    })
 
     return {
       paginatedTorrents,

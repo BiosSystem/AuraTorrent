@@ -11,6 +11,8 @@ import vuetify from './plugins/vuetify'
 
 const app = createApp(App)
 
+console.info('%c AuraTorrent Initialized - Bios-System ', 'background: #222; color: #bada55')
+
 app.config.performance = true
 
 app.use(router).use(vuetify).use(i18n).use(Vue3Toastify, toastifyOptions).use(pinia).mount('#app')

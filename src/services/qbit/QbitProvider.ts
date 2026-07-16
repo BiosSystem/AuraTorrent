@@ -37,9 +37,37 @@ export default class QBitProvider implements IProvider {
     const savedURL = typeof window !== 'undefined' ? localStorage.getItem('auratorrent_active_server_url') : null
     this.axios = axios.create({
       baseURL: savedURL || 'api/v2',
+      timeout: 15000,
     })
 
     this.axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
+
+    this.axios.interceptors.response.use(
+      response => response,
+      async (error) => {
+        const config = error.config
+        
+        if (!config) {
+          return Promise.reject(error)
+        }
+        
+        // Custom attribute for retry tracking
+        config.retryCount = config.retryCount ?? 0
+        
+        const isNetworkError = error.code === 'ECONNABORTED' || error.message.includes('timeout') || error.message.includes('Network Error')
+        
+        // Exponential backoff for network/timeout errors, max 3 retries
+        if (isNetworkError && config.retryCount < 3) {
+          config.retryCount += 1
+          const delay = Math.pow(2, config.retryCount) * 1000
+          await new Promise(resolve => setTimeout(resolve, delay))
+          return this.axios(config)
+        }
+        
+        // Explicitly bubble up clean error states (e.g. 403, 404, 500) for the UI to handle
+        return Promise.reject(error)
+      }
+    )
   }
 
   public setBaseURL(url: string) {
