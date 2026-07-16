@@ -1,11 +1,12 @@
 import { useSorted } from '@vueuse/core'
 import { acceptHMRUpdate, defineStore, storeToRefs } from 'pinia'
-import { computed, shallowRef, triggerRef } from 'vue'
+import { computed, shallowRef, triggerRef, watch } from 'vue'
+import { useMaindataStore } from './maindata'
 import { useTorrentStore } from './torrents'
 import { comparators } from '@/helpers'
 import qbit from '@/services/qbit'
 import { Category } from '@/types/qbit/models'
-
+import { isFullUpdate } from '@/types/qbit/responses'
 export const useCategoryStore = defineStore('categories', () => {
   /** Key: Category name */
   const _categoryMap = shallowRef<Map<string, Category>>(new Map())
@@ -61,6 +62,19 @@ export const useCategoryStore = defineStore('categories', () => {
     removed?.forEach(c => _categoryMap.value.delete(c))
     triggerRef(_categoryMap)
   }
+
+  const maindataStore = useMaindataStore()
+  watch(
+    () => maindataStore.rawPayload,
+    payload => {
+      if (!payload) return
+      if (isFullUpdate(payload)) {
+        syncFromMaindata(true, Object.entries(payload.categories ?? {}) as [string, Partial<Category>][])
+      } else {
+        syncFromMaindata(false, Object.entries(payload.categories ?? {}) as [string, Partial<Category>][], payload.categories_removed)
+      }
+    }
+  )
 
   function getCategoryFromName(categoryName?: string) {
     if (!categoryName) return

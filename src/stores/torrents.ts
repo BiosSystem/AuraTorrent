@@ -1,7 +1,8 @@
 import { useArrayFilter, useSorted, whenever } from '@vueuse/core'
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import { computed, MaybeRefOrGetter, ref, shallowRef, toValue, triggerRef } from 'vue'
+import { computed, MaybeRefOrGetter, ref, shallowRef, toValue, triggerRef, watch } from 'vue'
 import { useAppStore } from './app'
+import { useMaindataStore } from './maindata'
 import { useTorrentDetailStore } from './torrentDetail'
 import { useTrackerStore } from './trackers'
 import { useSearchQuery, useTorrentBuilder } from '@/composables'
@@ -9,6 +10,7 @@ import { comparatorMap, FilterType, TorrentState, TrackerSpecialFilter } from '@
 import qbit from '@/services/qbit'
 import { RawQbitTorrent } from '@/types/qbit/models'
 import { AddTorrentPayload } from '@/types/qbit/payloads'
+import { isFullUpdate } from '@/types/qbit/responses'
 import { Torrent as VtTorrent } from '@/types/vuetorrent'
 
 export const useTorrentStore = defineStore(
@@ -228,6 +230,19 @@ export const useTorrentStore = defineStore(
       removed?.forEach(t => _torrents.value.delete(t))
       triggerRef(_torrents)
     }
+
+    const maindataStore = useMaindataStore()
+    watch(
+      () => maindataStore.rawPayload,
+      payload => {
+        if (!payload) return
+        if (isFullUpdate(payload)) {
+          syncFromMaindata(true, Object.entries(payload.torrents ?? {}) as [string, Partial<RawQbitTorrent>][])
+        } else {
+          syncFromMaindata(false, Object.entries(payload.torrents ?? {}) as [string, Partial<RawQbitTorrent>][], payload.torrents_removed)
+        }
+      }
+    )
 
     async function setTorrentCategory(hashes: string[], category: string) {
       await qbit.setCategory(hashes, category)

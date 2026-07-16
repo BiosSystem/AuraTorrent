@@ -1,9 +1,11 @@
 import { useSorted } from '@vueuse/core'
 import { AxiosError } from 'axios'
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import { computed, shallowRef, triggerRef } from 'vue'
+import { computed, shallowRef, triggerRef, watch } from 'vue'
+import { useMaindataStore } from './maindata'
 import { comparators, extractHostname } from '@/helpers'
 import qbit from '@/services/qbit'
+import { isFullUpdate } from '@/types/qbit/responses'
 
 export const useTrackerStore = defineStore('trackers', () => {
   /** Key: tracker domain, values: torrent hashes */
@@ -65,6 +67,19 @@ export const useTrackerStore = defineStore('trackers', () => {
     removed?.forEach(t => _trackerMap.value.delete(t))
     triggerRef(_trackerMap)
   }
+
+  const maindataStore = useMaindataStore()
+  watch(
+    () => maindataStore.rawPayload,
+    payload => {
+      if (!payload) return
+      if (isFullUpdate(payload)) {
+        syncFromMaindata(true, Object.entries(payload.trackers ?? {}) as [string, string[]][])
+      } else {
+        syncFromMaindata(false, Object.entries(payload.trackers ?? {}) as [string, string[]][], payload.trackers_removed)
+      }
+    }
+  )
 
   async function getTorrentTrackers(hash: string) {
     return await qbit.getTorrentTrackers(hash)

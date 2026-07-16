@@ -1,9 +1,11 @@
 import { useSorted } from '@vueuse/core'
 import { acceptHMRUpdate, defineStore, storeToRefs } from 'pinia'
-import { computed, shallowRef, triggerRef } from 'vue'
+import { computed, shallowRef, triggerRef, watch } from 'vue'
+import { useMaindataStore } from './maindata'
 import { useTorrentStore } from './torrents'
 import { comparators } from '@/helpers'
 import qbit from '@/services/qbit'
+import { isFullUpdate } from '@/types/qbit/responses'
 
 export const useTagStore = defineStore('tags', () => {
   const _tags = shallowRef<Set<string>>(new Set())
@@ -44,6 +46,19 @@ export const useTagStore = defineStore('tags', () => {
     removed?.forEach(tag => _tags.value.delete(tag))
     triggerRef(_tags)
   }
+
+  const maindataStore = useMaindataStore()
+  watch(
+    () => maindataStore.rawPayload,
+    payload => {
+      if (!payload) return
+      if (isFullUpdate(payload)) {
+        syncFromMaindata(true, payload.tags ?? [])
+      } else {
+        syncFromMaindata(false, payload.tags ?? [], payload.tags_removed)
+      }
+    }
+  )
 
   async function createTags(tags: string[]) {
     await qbit.createTag(tags)
