@@ -2862,3 +2862,5 @@ Everything below this line is the changelog inherited from upstream VueTorrent a
 ### Performance Improvements
 
 - softer red color [#155](https://www.github.com/WDaan/VueTorrent/issues/155) ([cbf845a](https://www.github.com/WDaan/VueTorrent/commit/cbf845a8a407895e8d6093c584ea96497c45cac0))
+## [History Scrub] - 2026-07-16
+* Rewrote git history via git filter-branch to strip invalid em-dashes and fix conventional commit prefix violations.
