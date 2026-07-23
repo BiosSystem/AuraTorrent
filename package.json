@@ -40,7 +40,7 @@
     "dayjs": "^1.11.20",
     "dompurify": "^3.4.5",
     "lodash.debounce": "^4.0.8",
-    "pinia": "^3.0.4",
+    "pinia": "^4.0.2",
     "pinia-persistence-plugin": "^0.0.7",
     "pixi.js": "^8.19.0",
     "uuid": "^14.0.0",
