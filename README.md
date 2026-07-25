@@ -19,7 +19,7 @@
   <strong>🌐 Part of the <a href="https://bios-system.net">BiosSystem Suite</a></strong>
 </p>
 
-**AuraTorrent** is a beautiful, lightning-fast open-source WebUI for qBittorrent. Built on Vue 3 and Vite, it reimagines the seedbox experience with dynamic scheduling, real-time telemetry HUDs, and deep customization.
+**AuraTorrent** is a fast open-source WebUI for qBittorrent. Built on Vue 3 and Vite, it includes dynamic scheduling, real-time telemetry HUDs, and deep customization.
 
 <p align="center">
   <h3>⚡ WebUI Overview & Torrent Dashboard</h3>
@@ -88,13 +88,11 @@ graph TB
     BOT --> REST
 ```
 
-## ✨ Why It's Unique
+## ✨ Features
 
-Unlike standard qBittorrent WebUIs, AuraTorrent includes a few extra features built for power users:
-
-- **Bandwidth Scheduling Matrix** - A 7x24 visual heatmap grid to paint your bandwidth schedule visually. The UI automatically throttles qBittorrent based on the current hour.
-- **Global Command Palette** - Press `Cmd/Ctrl + K` to instantly jump to specific settings, perform actions, or search torrents without touching the mouse.
-- **AuraTheme Engine** - A live, built-in CSS variable editor. Adjust glassmorphism blur, neon glow intensity, and accent colors in real-time, then export to JSON.
+- **Bandwidth Scheduling Matrix** - Use a 7x24 visual heatmap grid to paint your bandwidth schedule. The UI throttles qBittorrent automatically based on the current hour.
+- **Global Command Palette** - Press `Cmd/Ctrl + K` to jump to specific settings, perform actions, or search torrents instantly.
+- **AuraTheme Engine** - Adjust glassmorphism blur, neon glow intensity, and accent colors in real-time, then export to JSON using the live CSS variable editor.
 - **Global Speed Ticker** - Press `Ctrl+Shift+T` anywhere to summon a floating, always-on-top HUD sparkline graph of your current I/O speeds.
 - **B-I-O-S Easter Egg** - Type `B-I-O-S` on your keyboard to open the BiosSystem Kernel Diagnostic HUD.
 
@@ -135,18 +133,18 @@ unzip auratorrent.zip -d /path/to/qbittorrent/webui
 
 Open `Options → WebUI`, check **Use alternative Web UI**, and point it to the extracted folder.
 
-**Step 4.** Reload your browser and enjoy AuraTorrent.
+**Step 4.** Reload your browser.
 
 ## 🐳 Docker
 
-Run the whole stack (qBittorrent plus AuraTorrent's static build) with Docker Compose:
+Run the stack (qBittorrent plus AuraTorrent's static build) with Docker Compose:
 
 ```bash
-npm run build          # produce ./dist for qBittorrent to serve
+npm run build
 docker compose up -d
 ```
 
-Prefer a standalone, nginx-served container? Pull the published image:
+Pull the standalone, nginx-served published image:
 
 ```bash
 docker pull ghcr.io/biossystem/auratorrent:latest
@@ -160,10 +158,11 @@ AuraBot pushes download-complete and error alerts to Telegram and answers `/stat
 **Step 1.** Configure it:
 ```bash
 cd bot
-cp .env.example .env   # set BOT_TOKEN, ALLOWED_USERS, and OWNER_ID
+cp .env.example .env
 ```
+*(Set BOT_TOKEN, ALLOWED_USERS, and OWNER_ID)*
 
-**Step 2.** Run it, either directly or via the `aurabot` service in `docker-compose.yml`:
+**Step 2.** Run it:
 ```bash
 pip install -r requirements.txt
 python main.py
@@ -189,25 +188,25 @@ npm run dev
 
 **Step 4.** Open `http://localhost:5173` and connect to your local qBittorrent instance.
 
-## 📖 Documentation
+## 📖 Developer Wiki
 
-Full documentation is available in the **[Wiki](https://github.com/BiosSystem/AuraTorrent/wiki)**.
+Review the deep technical insights and step-by-step guides in the **[Developer Wiki](docs/Home.md)** to understand how the system works under the hood.
 
 ## 🙏 Attribution & Credits
 
-AuraTorrent builds upon the open-source PWA foundation of **VueTorrent**. We honor and attribute the core architecture to **WDaan** and the VueTorrent contributor community.
+AuraTorrent builds upon the open-source PWA foundation of **VueTorrent**. We attribute the core architecture to **WDaan** and the VueTorrent contributor community.
 
 - **Original Repository**: [VueTorrent](https://github.com/VueTorrent/VueTorrent)
 - **License**: GPL-3.0
 
 ## 🔒 Security
 
-AuraTorrent is built with safety and code integrity in mind:
+AuraTorrent enforces strict web security boundaries:
 
-- **Enforced Dependency Audit** - CI runs `npm audit` on every pull request and fails the build on any high-severity finding, keeping the dependency tree clean.
+- **Enforced Dependency Audit** - CI runs `npm audit` on every pull request and fails the build on any high-severity finding.
 - **Strict WebUI Sandboxing** - Enforces restricted API communications and secure CORS configurations.
 - **Upstream Parity Security Fixes** - Integrates upstream patches directly from verified VueTorrent pull requests.
 
-For detailed security policies and reporting guidelines, refer to our [Security Policy](SECURITY.md).
+Review our [Security Policy](SECURITY.md) for detailed guidelines.
 
 *Copyright © 2026 BiosSystem | Powered by BiosSystem Kernel*
