@@ -69,7 +69,7 @@ export const useCategoryStore = defineStore('categories', () => {
     payload => {
       if (!payload) return
       if (isFullUpdate(payload)) {
-        syncFromMaindata(true, Object.entries(payload.categories ?? {}) as [string, Partial<Category>][])
+        syncFromMaindata(true, Object.entries(payload.categories ?? {}))
       } else {
         syncFromMaindata(false, Object.entries(payload.categories ?? {}) as [string, Partial<Category>][], payload.categories_removed)
       }

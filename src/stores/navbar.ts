@@ -1,7 +1,7 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
-import { useMaindataStore } from './maindata'
 import { useDisplay } from 'vuetify'
+import { useMaindataStore } from './maindata'
 
 const GRAPH_SIZE = 15
 

@@ -2,6 +2,28 @@
 
 ## [Unreleased]
 
+### Fixed
+* **CI:** The unit job had been failing at the lint step since 2026-07-16, before tests or build
+  ever ran. `npm run lint` reported 25 errors while `vitest`, `vue-tsc`, `vite build` and the
+  Python bot tests were all green, so the pipeline was red for a reason none of the test output
+  showed.
+* **CI:** The cause was the axios retry interceptor added in `c3dcbfd`, not a dependency bump.
+  It carried trailing whitespace on 14 lines, parenthesised single arrow parameters, and two
+  `Promise.reject(error)` calls in each of `backend.ts` and `QbitProvider.ts` where the rejection
+  reason was implicitly `any`.
+* **Types:** Both response interceptors now take `error: AxiosError` instead of an implicit
+  parameter. `AxiosError` extends `Error`, so `prefer-promise-reject-errors` is satisfied without
+  changing what is rejected and downstream `isAxiosError` checks still work. The retry counter
+  the interceptor stores on the request config is declared as
+  `InternalAxiosRequestConfig & { retryCount?: number }` rather than asserted away at each use.
+* **Style:** 21 further lint errors resolved by `eslint --fix` across `App.vue`,
+  `CommandPalette.vue`, `categories.ts`, `maindata.ts`, `navbar.ts`, `torrents.ts` and
+  `trackers.ts`. Import ordering, prettier formatting, one stray CRLF, and three unnecessary type
+  assertions.
+
+Verified after the change: lint 0, `vue-tsc` 0, 372 unit tests in 25 files, `npm run build` 0,
+and 12 Python bot tests. No dependency version was changed.
+
 ### Changed
 * **Architecture:** Decoupled Pinia state management. `maindataStore` no longer acts as a monolithic controller. Child stores (`categories`, `tags`, `torrents`, `trackers`, `navbar`, `dashboard`) now reactively subscribe to `maindataStore.rawPayload` and `serverState` via `watch()` for autonomous synchronization.
 * **Architecture:** Upgraded monolithic `catch (error: any)` block in main data synchronization loop to strict-typed `catch (error: unknown)` with explicit Axios boundaries.
