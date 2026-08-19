@@ -1,3 +1,9 @@
+## [2026-08-19]
+
+- Fix GitHub Actions workflows for GHCR publishing
+- Replace hardcoded action SHAs with stable major version tags
+- Remove obsolete FORCE_JAVASCRIPT_ACTIONS_TO_NODE24 override
+
 # Changelog
 
 ## [Unreleased]
@@ -2886,3 +2892,4 @@ Everything below this line is the changelog inherited from upstream VueTorrent a
 - softer red color [#155](https://www.github.com/WDaan/VueTorrent/issues/155) ([cbf845a](https://www.github.com/WDaan/VueTorrent/commit/cbf845a8a407895e8d6093c584ea96497c45cac0))
 ## [History Scrub] - 2026-07-16
 * Rewrote git history via git filter-branch to strip invalid em-dashes and fix conventional commit prefix violations.
+
