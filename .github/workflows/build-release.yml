@@ -1,4 +1,4 @@
-﻿name: Build and Release AuraTorrent
+name: Build and Release AuraTorrent
 
 on:
   push:
@@ -54,7 +54,7 @@ jobs:
           npm run ${{ matrix.npm-step }}
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.artifact-name }}
           path: ${{ matrix.artifact-path }}
@@ -71,7 +71,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: auratorrent-build
           path: ./auratorrent
@@ -108,7 +108,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: auratorrent-build
           path: ./auratorrent
@@ -152,7 +152,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: auratorrent-build
           path: ./auratorrent
