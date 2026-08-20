@@ -1,3 +1,13 @@
+## [2026-08-20 - Platform handoff audit]
+
+- Confirm local `fix/cicd-release-workflows` is four commits ahead of remote master and one commit
+  ahead of its remote branch.
+- Confirm remote master still fails with 25 lint errors. The local fix exists in `4138184` but has
+  not been integrated.
+- Confirm six open Dependabot pull requests are blocked by the red base branch.
+- Record that dependency review also fails because dependency graph support is disabled for the
+  repository. Treat this as a workflow configuration issue, not a package regression.
+
 ## [2026-08-19]
 
 - Fix GitHub Actions workflows for GHCR publishing
