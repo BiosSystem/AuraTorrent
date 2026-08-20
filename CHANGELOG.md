@@ -1,3 +1,14 @@
+## [2026-08-20 - Clear master lint gate for Dependabot refresh]
+
+- Run `npm run lint:fix` and confirm it makes no additional changes because commit `4138184`
+  already contains the 25 required lint corrections.
+- Pass the final ESLint check with zero warnings or errors.
+- Pass 25 Vitest files with 372 tests and complete the production build.
+- Confirm Dependabot pull requests #60 through #65 remain blocked against remote master until the
+  local workflow and lint branch is integrated.
+- Rebase each dependency branch with `gh pr update-branch <number> --rebase` after master contains
+  the local fixes.
+
 ## [2026-08-20 - Platform handoff audit]
 
 - Confirm local `fix/cicd-release-workflows` is four commits ahead of remote master and one commit
