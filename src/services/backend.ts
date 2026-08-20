@@ -1,4 +1,7 @@
-import axios, { AxiosInstance } from 'axios'
+import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios'
+
+// retryCount is our own bookkeeping on the request config, not an axios field.
+type RetryableConfig = InternalAxiosRequestConfig & { retryCount?: number }
 
 class BackendProvider {
   private axios: AxiosInstance
@@ -24,24 +27,27 @@ class BackendProvider {
 
     this.axios.interceptors.response.use(
       response => response,
-      async (error) => {
-        const config = error.config
-        
+      // Typed as AxiosError rather than left implicit so that rejecting with it
+      // satisfies prefer-promise-reject-errors. AxiosError extends Error, so the
+      // rejection value is unchanged and downstream isAxiosError checks still work.
+      async (error: AxiosError) => {
+        const config = error.config as RetryableConfig | undefined
+
         if (!config) {
           return Promise.reject(error)
         }
-        
+
         config.retryCount = config.retryCount ?? 0
-        
+
         const isNetworkError = error.code === 'ECONNABORTED' || error.message.includes('timeout') || error.message.includes('Network Error')
-        
+
         if (isNetworkError && config.retryCount < 3) {
           config.retryCount += 1
           const delay = Math.pow(2, config.retryCount) * 1000
           await new Promise(resolve => setTimeout(resolve, delay))
           return this.axios(config)
         }
-        
+
         return Promise.reject(error)
       }
     )

@@ -16,11 +16,10 @@
         variant="solo"
         flat
         class="command-palette-input"
-        @update:model-value="onSelect"
-      >
+        @update:model-value="onSelect">
         <template #item="{ props, item }">
           <v-list-item v-bind="props" :prepend-icon="(item as any).raw.icon" :title="(item as any).raw.title">
-            <template #append v-if="(item as any).raw.shortcut">
+            <template v-if="(item as any).raw.shortcut" #append>
               <v-chip size="x-small" variant="flat" color="grey-darken-3">{{ (item as any).raw.shortcut }}</v-chip>
             </template>
           </v-list-item>

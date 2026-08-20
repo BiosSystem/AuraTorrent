@@ -1,9 +1,9 @@
 import { useIntervalFn } from '@vueuse/core'
+import { isAxiosError } from 'axios'
 import { acceptHMRUpdate, defineStore, storeToRefs } from 'pinia'
 import { ref, shallowRef } from 'vue'
 import { useTask } from 'vue-concurrency'
 import { toast } from 'vue3-toastify'
-import { isAxiosError } from 'axios'
 import { useAppStore } from './app'
 import { useVueTorrentStore } from './vuetorrent'
 import qbit from '@/services/qbit'
@@ -70,7 +70,6 @@ export const useMaindataStore = defineStore('maindata', () => {
       }
     }
   }
-
 
   async function syncTorrentPeers(hash: string, rid?: number) {
     return await qbit.syncTorrentPeers(hash, rid)

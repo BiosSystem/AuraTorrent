@@ -1,4 +1,4 @@
-import type { AxiosInstance, AxiosRequestConfig } from 'axios'
+import type { AxiosError, AxiosInstance, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios'
 import axios, { AxiosResponse } from 'axios'
 import type IProvider from './IProvider'
 import type { FilePriority } from '@/constants/qbit'
@@ -29,6 +29,9 @@ import type { MaindataResponse, SearchResultsResponse, TorrentPeersResponse } fr
 
 type Parameters = Record<string, any>
 
+// retryCount is our own bookkeeping on the request config, not an axios field.
+type RetryableConfig = InternalAxiosRequestConfig & { retryCount?: number }
+
 export default class QBitProvider implements IProvider {
   private static _instance: QBitProvider
   private axios: AxiosInstance
@@ -44,18 +47,21 @@ export default class QBitProvider implements IProvider {
 
     this.axios.interceptors.response.use(
       response => response,
-      async (error) => {
-        const config = error.config
-        
+      // Typed as AxiosError rather than left implicit so that rejecting with it
+      // satisfies prefer-promise-reject-errors. AxiosError extends Error, so the
+      // rejection value is unchanged and downstream isAxiosError checks still work.
+      async (error: AxiosError) => {
+        const config = error.config as RetryableConfig | undefined
+
         if (!config) {
           return Promise.reject(error)
         }
-        
+
         // Custom attribute for retry tracking
         config.retryCount = config.retryCount ?? 0
-        
+
         const isNetworkError = error.code === 'ECONNABORTED' || error.message.includes('timeout') || error.message.includes('Network Error')
-        
+
         // Exponential backoff for network/timeout errors, max 3 retries
         if (isNetworkError && config.retryCount < 3) {
           config.retryCount += 1
@@ -63,7 +69,7 @@ export default class QBitProvider implements IProvider {
           await new Promise(resolve => setTimeout(resolve, delay))
           return this.axios(config)
         }
-        
+
         // Explicitly bubble up clean error states (e.g. 403, 404, 500) for the UI to handle
         return Promise.reject(error)
       }

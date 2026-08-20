@@ -1,6 +1,55 @@
+## [2026-08-20 - Clear master lint gate for Dependabot refresh]
+
+- Run `npm run lint:fix` and confirm it makes no additional changes because commit `4138184`
+  already contains the 25 required lint corrections.
+- Pass the final ESLint check with zero warnings or errors.
+- Pass 25 Vitest files with 372 tests and complete the production build.
+- Confirm Dependabot pull requests #60 through #65 remain blocked against remote master until the
+  local workflow and lint branch is integrated.
+- Rebase each dependency branch with `gh pr update-branch <number> --rebase` after master contains
+  the local fixes.
+
+## [2026-08-20 - Platform handoff audit]
+
+- Confirm local `fix/cicd-release-workflows` is four commits ahead of remote master and one commit
+  ahead of its remote branch.
+- Confirm remote master still fails with 25 lint errors. The local fix exists in `4138184` but has
+  not been integrated.
+- Confirm six open Dependabot pull requests are blocked by the red base branch.
+- Record that dependency review also fails because dependency graph support is disabled for the
+  repository. Treat this as a workflow configuration issue, not a package regression.
+
+## [2026-08-19]
+
+- Fix GitHub Actions workflows for GHCR publishing
+- Replace hardcoded action SHAs with stable major version tags
+- Remove obsolete FORCE_JAVASCRIPT_ACTIONS_TO_NODE24 override
+
 # Changelog
 
 ## [Unreleased]
+
+### Fixed
+* **CI:** The unit job had been failing at the lint step since 2026-07-16, before tests or build
+  ever ran. `npm run lint` reported 25 errors while `vitest`, `vue-tsc`, `vite build` and the
+  Python bot tests were all green, so the pipeline was red for a reason none of the test output
+  showed.
+* **CI:** The cause was the axios retry interceptor added in `c3dcbfd`, not a dependency bump.
+  It carried trailing whitespace on 14 lines, parenthesised single arrow parameters, and two
+  `Promise.reject(error)` calls in each of `backend.ts` and `QbitProvider.ts` where the rejection
+  reason was implicitly `any`.
+* **Types:** Both response interceptors now take `error: AxiosError` instead of an implicit
+  parameter. `AxiosError` extends `Error`, so `prefer-promise-reject-errors` is satisfied without
+  changing what is rejected and downstream `isAxiosError` checks still work. The retry counter
+  the interceptor stores on the request config is declared as
+  `InternalAxiosRequestConfig & { retryCount?: number }` rather than asserted away at each use.
+* **Style:** 21 further lint errors resolved by `eslint --fix` across `App.vue`,
+  `CommandPalette.vue`, `categories.ts`, `maindata.ts`, `navbar.ts`, `torrents.ts` and
+  `trackers.ts`. Import ordering, prettier formatting, one stray CRLF, and three unnecessary type
+  assertions.
+
+Verified after the change: lint 0, `vue-tsc` 0, 372 unit tests in 25 files, `npm run build` 0,
+and 12 Python bot tests. No dependency version was changed.
 
 ### Changed
 * **Architecture:** Decoupled Pinia state management. `maindataStore` no longer acts as a monolithic controller. Child stores (`categories`, `tags`, `torrents`, `trackers`, `navbar`, `dashboard`) now reactively subscribe to `maindataStore.rawPayload` and `serverState` via `watch()` for autonomous synchronization.
@@ -2864,3 +2913,4 @@ Everything below this line is the changelog inherited from upstream VueTorrent a
 - softer red color [#155](https://www.github.com/WDaan/VueTorrent/issues/155) ([cbf845a](https://www.github.com/WDaan/VueTorrent/commit/cbf845a8a407895e8d6093c584ea96497c45cac0))
 ## [History Scrub] - 2026-07-16
 * Rewrote git history via git filter-branch to strip invalid em-dashes and fix conventional commit prefix violations.
+

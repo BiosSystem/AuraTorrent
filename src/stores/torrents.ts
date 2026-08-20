@@ -237,7 +237,7 @@ export const useTorrentStore = defineStore(
       payload => {
         if (!payload) return
         if (isFullUpdate(payload)) {
-          syncFromMaindata(true, Object.entries(payload.torrents ?? {}) as [string, Partial<RawQbitTorrent>][])
+          syncFromMaindata(true, Object.entries(payload.torrents ?? {}))
         } else {
           syncFromMaindata(false, Object.entries(payload.torrents ?? {}) as [string, Partial<RawQbitTorrent>][], payload.torrents_removed)
         }

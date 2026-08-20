@@ -74,7 +74,7 @@ export const useTrackerStore = defineStore('trackers', () => {
     payload => {
       if (!payload) return
       if (isFullUpdate(payload)) {
-        syncFromMaindata(true, Object.entries(payload.trackers ?? {}) as [string, string[]][])
+        syncFromMaindata(true, Object.entries(payload.trackers ?? {}))
       } else {
         syncFromMaindata(false, Object.entries(payload.trackers ?? {}) as [string, string[]][], payload.trackers_removed)
       }
