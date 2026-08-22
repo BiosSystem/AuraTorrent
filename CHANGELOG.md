@@ -1,3 +1,11 @@
+## [2026-08-22 - Synchronize release and architecture history]
+
+- Record AuraTorrent v2.4.0 as a published stable release from 2026-08-19.
+- Record the completed workflow, lint, and frontend coverage repairs that restored the master CI baseline.
+- Record the completed refresh and integration of the six pending dependency pull requests.
+- Record the RSS feed manager as the latest application milestone on master.
+- Keep NAS runtime identity verification separate from repository release publication. The NAS container is healthy, but byte-level parity with the v2.4.0 artifact remains unclaimed.
+
 ## [2026-08-20 - Clear master lint gate for Dependabot refresh]
 
 - Run `npm run lint:fix` and confirm it makes no additional changes because commit `4138184`
