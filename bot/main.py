@@ -7,6 +7,28 @@ import time
 from collections import defaultdict, deque
 from typing import Callable, Optional, List, TypedDict
 
+class RssFeed(TypedDict, total=False):
+    url: str
+    uid: str
+    hasError: bool
+    isLoading: bool
+    articles: List[dict]
+
+class RssRuleDef(TypedDict, total=False):
+    enabled: bool
+    mustContain: str
+    mustNotContain: str
+    useRegex: bool
+    episodeFilter: str
+    smartFilter: bool
+    previouslyMatchedEpisodes: List[str]
+    affectedFeeds: List[str]
+    ignoreDays: int
+    lastMatch: str
+    addPaused: bool
+    assignedCategory: str
+    savePath: str
+
 class TorrentData(TypedDict, total=False):
     hash: str
     name: str
@@ -235,6 +257,46 @@ class QBittorrentClient:
             logger.error(f"Failed to fetch torrents: {resp.status}")
             return None
 
+
+    async def add_feed(self, url: str, path: str = "") -> bool:
+        session = await self._ensure_session()
+        data = {"url": url, "path": path}
+        async with session.post(f"{QBITTORRENT_URL}/api/v2/rss/addFeed", data=data) as resp:
+            return resp.status == 200
+
+    async def remove_feed(self, path: str) -> bool:
+        session = await self._ensure_session()
+        data = {"path": path}
+        async with session.post(f"{QBITTORRENT_URL}/api/v2/rss/removeItem", data=data) as resp:
+            return resp.status == 200
+
+    async def list_feeds(self) -> dict:
+        session = await self._ensure_session()
+        async with session.get(f"{QBITTORRENT_URL}/api/v2/rss/items?withData=false") as resp:
+            if resp.status == 200:
+                return await resp.json()
+            return {}
+
+    async def add_rule(self, ruleName: str, ruleDef: dict) -> bool:
+        import json
+        session = await self._ensure_session()
+        data = {"ruleName": ruleName, "ruleDef": json.dumps(ruleDef)}
+        async with session.post(f"{QBITTORRENT_URL}/api/v2/rss/setRule", data=data) as resp:
+            return resp.status == 200
+
+    async def remove_rule(self, ruleName: str) -> bool:
+        session = await self._ensure_session()
+        data = {"ruleName": ruleName}
+        async with session.post(f"{QBITTORRENT_URL}/api/v2/rss/removeRule", data=data) as resp:
+            return resp.status == 200
+
+    async def list_rules(self) -> dict:
+        session = await self._ensure_session()
+        async with session.get(f"{QBITTORRENT_URL}/api/v2/rss/rules") as resp:
+            if resp.status == 200:
+                return await resp.json()
+            return {}
+
     async def close(self) -> None:
         if self._session and not self._session.closed:
             await self._session.close()
@@ -343,6 +405,92 @@ async def cmd_add_user(message: Message):
     else:
         await message.reply(f"User {new_user} is already allowed.")
 
+
+
+@dp.message(Command("add_feed"))
+@guarded
+async def cmd_add_feed(message: Message):
+    parts = message.text.split(maxsplit=2)
+    if len(parts) < 2:
+        await message.reply("Usage: /add_feed <url> [name]")
+        return
+    url = parts[1]
+    name = parts[2] if len(parts) > 2 else ""
+    success = await qbit.add_feed(url, name)
+    if success:
+        await message.reply(f"✅ Feed added: {url}")
+    else:
+        await message.reply(f"❌ Failed to add feed: {url}")
+
+@dp.message(Command("remove_feed"))
+@guarded
+async def cmd_remove_feed(message: Message):
+    parts = message.text.split(maxsplit=1)
+    if len(parts) < 2:
+        await message.reply("Usage: /remove_feed <name>")
+        return
+    name = parts[1]
+    success = await qbit.remove_feed(name)
+    if success:
+        await message.reply(f"✅ Feed removed: {name}")
+    else:
+        await message.reply(f"❌ Failed to remove feed: {name}")
+
+@dp.message(Command("list_feeds"))
+@guarded
+async def cmd_list_feeds(message: Message):
+    feeds = await qbit.list_feeds()
+    if not feeds:
+        await message.reply("No feeds found.")
+        return
+    text = "📡 <b>RSS Feeds</b>\n"
+    for path, data in feeds.items():
+        url = data.get("url", "")
+        text += f"\n• <code>{html.escape(path)}</code> - {html.escape(url)}"
+    await message.reply(text, parse_mode="HTML")
+
+@dp.message(Command("add_rule"))
+@guarded
+async def cmd_add_rule(message: Message):
+    parts = message.text.split(maxsplit=2)
+    if len(parts) < 3:
+        await message.reply("Usage: /add_rule <name> <mustContain>")
+        return
+    name = parts[1]
+    mustContain = parts[2]
+    ruleDef: RssRuleDef = {"enabled": True, "mustContain": mustContain}
+    success = await qbit.add_rule(name, ruleDef)
+    if success:
+        await message.reply(f"✅ Rule added: {name}")
+    else:
+        await message.reply(f"❌ Failed to add rule: {name}")
+
+@dp.message(Command("remove_rule"))
+@guarded
+async def cmd_remove_rule(message: Message):
+    parts = message.text.split(maxsplit=1)
+    if len(parts) < 2:
+        await message.reply("Usage: /remove_rule <name>")
+        return
+    name = parts[1]
+    success = await qbit.remove_rule(name)
+    if success:
+        await message.reply(f"✅ Rule removed: {name}")
+    else:
+        await message.reply(f"❌ Failed to remove rule: {name}")
+
+@dp.message(Command("list_rules"))
+@guarded
+async def cmd_list_rules(message: Message):
+    rules = await qbit.list_rules()
+    if not rules:
+        await message.reply("No rules found.")
+        return
+    text = "📜 <b>RSS Rules</b>\n"
+    for name, data in rules.items():
+        mustContain = data.get("mustContain", "")
+        text += f"\n• <code>{html.escape(name)}</code>: {html.escape(mustContain)}"
+    await message.reply(text, parse_mode="HTML")
 
 async def main() -> None:
     global bot

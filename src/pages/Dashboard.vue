@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
 import TRC from '@/components/Dashboard/RightClick.vue'
 import Toolbar from '@/components/Dashboard/Toolbar.vue'
+import RssManager from '@/components/Dashboard/RssManager.vue'
 import GridView from '@/components/Dashboard/Views/Grid/GridView.vue'
 import ListView from '@/components/Dashboard/Views/List/ListView.vue'
 import TableView from '@/components/Dashboard/Views/Table/TableView.vue'
@@ -211,6 +212,8 @@ onBeforeUnmount(() => {
 <template>
   <div class="pt-2 px-1 px-sm-4">
     <Toolbar />
+
+      <RssManager />
 
     <v-row class="ma-0 pa-0">
       <v-expand-transition>
