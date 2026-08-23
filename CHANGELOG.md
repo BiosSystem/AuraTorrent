@@ -1,3 +1,9 @@
+## [2026-08-23 - Resolve CI build and release pipeline failures]
+
+- Fix cosign installer action tag in container publishing workflow by updating from nonexistent v4 to v3.8.1.
+- Fix ApexOptions chart colors type mismatch in SpeedGraph navbar component for vue-tsc type checking.
+- Pass local production build and type checking gates.
+
 ## [2026-08-22 - Synchronize release and architecture history]
 
 - Record AuraTorrent v2.4.0 as a published stable release from 2026-08-19.

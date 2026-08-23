@@ -24,7 +24,7 @@ const chartOptions: ApexOptions = {
       enabled: false,
     },
   },
-  colors: [theme.current.value.colors.upload, theme.current.value.colors.download],
+  colors: [String(theme.current.value.colors.upload), String(theme.current.value.colors.download)],
   stroke: {
     show: true,
     curve: 'smooth',
