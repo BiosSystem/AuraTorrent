@@ -1,3 +1,9 @@
+## [2026-08-27 - Remove intrusive RSS manager from main dashboard]
+
+- Remove RssManager component from Dashboard.vue to prevent persistent overlay on torrent views.
+- Delete redundant RssManager.vue component in favor of the dedicated RSS articles page.
+- Verify full production build and pass all 372 unit tests across 25 test files.
+
 ## [2026-08-23 - Resolve CI build and release pipeline failures]
 
 - Fix cosign installer action tag in container publishing workflow by updating from nonexistent v4 to v3.8.1.
