@@ -38,16 +38,16 @@
     "array.prototype.tosorted": "1.1.4",
     "axios": "^1.19.0",
     "dayjs": "^1.11.23",
-    "dompurify": "^3.4.13",
+    "dompurify": "^3.4.15",
     "lodash.debounce": "^4.0.8",
     "pinia": "^3.0.4",
     "pinia-persistence-plugin": "^0.0.7",
     "pixi.js": "^8.19.0",
     "uuid": "^14.0.2",
     "vite-plugin-vuetify": "^2.1.3",
-    "vue": "^3.5.41",
+    "vue": "^3.5.42",
     "vue-concurrency": "^5.0.3",
-    "vue-i18n": "^11.4.8",
+    "vue-i18n": "^11.4.10",
     "vue-router": "^5.2.0",
     "vue3-apexcharts": "^1.11.1",
     "vue3-toastify": "^0.2.9",
@@ -86,6 +86,6 @@
     "vite-plugin-pwa": "^1.3.0",
     "vitest": "^4.1.7",
     "vitest-localstorage-mock": "^0.1.2",
-    "vue-tsc": "^3.3.10"
+    "vue-tsc": "^3.3.11"
   }
 }
