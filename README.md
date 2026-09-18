@@ -16,7 +16,7 @@
 </p>
 
 <p align="center">
-  <strong>🌐 Part of the <a href="https://bios-system.net">BiosSystem Suite</a></strong>
+  <strong>🌐 Part of the <a href="https://github.com/BiosSystem">BiosSystem Suite</a></strong>
 </p>
 
 **AuraTorrent** is a fast open-source WebUI for qBittorrent. Built on Vue 3 and Vite, it includes dynamic scheduling, real-time telemetry HUDs, and deep customization.
