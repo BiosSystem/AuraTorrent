@@ -87,5 +87,8 @@
     "vitest": "^4.1.7",
     "vitest-localstorage-mock": "^0.1.2",
     "vue-tsc": "^3.3.12"
+  },
+  "overrides": {
+    "unrs-resolver": "1.11.1"
   }
 }
