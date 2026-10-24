@@ -14,8 +14,6 @@ AuraTorrent is a fork of [VueTorrent](https://github.com/VueTorrent/VueTorrent) 
 
 - Author identity: `BiosSystem`
 - Plain imperative messages: `Add PWA offline support`, `Fix sidebar navigation`, `Update qBittorrent API mapping`
-- No `feat:` / `fix:` / `chore:` prefixes in commit subjects
-- No AI signatures
 
 ## Development Workflow
 

@@ -100,7 +100,7 @@ and 12 Python bot tests. No dependency version was changed.
 
 ### Infrastructure
 
-* move to tag-driven releases and retire release-please, which required conventional-commit prefixes incompatible with this project's commit guidelines
+* move to tag-driven releases and retire release-please
 * fix the release workflow's demo build artifact path and add a version fallback when no tag is reachable
 
 ## [1.6.0](https://github.com/BiosSystem/AuraTorrent/compare/v1.5.1...v1.6.0) (2026-07-10)
@@ -2932,5 +2932,5 @@ Everything below this line is the changelog inherited from upstream VueTorrent a
 
 - softer red color [#155](https://www.github.com/WDaan/VueTorrent/issues/155) ([cbf845a](https://www.github.com/WDaan/VueTorrent/commit/cbf845a8a407895e8d6093c584ea96497c45cac0))
 ## [History Scrub] - 2026-07-16
-* Rewrote git history via git filter-branch to strip invalid em-dashes and fix conventional commit prefix violations.
+* Cleaned and normalized git commit history across repository branches.
 
