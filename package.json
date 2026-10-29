@@ -62,7 +62,7 @@
     "@types/lodash.debounce": "^4.0.9",
     "@types/node": "^26.2.0",
     "@typescript-eslint/eslint-plugin": "^8.71.2",
-    "@typescript-eslint/parser": "^8.71.2",
+    "@typescript-eslint/parser": "^8.72.0",
     "@vitejs/plugin-vue": "^6.0.9",
     "@vitest/coverage-v8": "^4.1.12",
     "@vue/eslint-config-typescript": "^14.7.0",
