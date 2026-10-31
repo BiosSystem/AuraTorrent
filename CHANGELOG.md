@@ -9,6 +9,12 @@
 - Raise follow-redirects from 1.16.1 to 1.16.2 (CVE-2026-116689, reached through axios). Lockfile only.
 - Verify 372 unit tests across 25 files and the production build. (#127)
 
+## [2026-10-29 - Dependabot updates]
+
+- Raise vite from 8.3.4 to 8.3.5 and vitest-localstorage-mock from 0.1.2 to 0.1.3. (#121)
+- Raise @typescript-eslint/parser from 8.71.2 to 8.72.0. (#122)
+- Raise the CodeQL actions from 4.39.0 to 4.39.1 and actions/setup-python in the workflows. (#125)
+
 ## [2026-08-27 - Remove intrusive RSS manager from main dashboard]
 
 - Remove RssManager component from Dashboard.vue to prevent persistent overlay on torrent views.
