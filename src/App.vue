@@ -46,15 +46,20 @@ const { language, uiTitleCustom, uiTitleType, useBitSpeed } = storeToRefs(vuetor
 const showBiosHud = ref(false)
 
 const backendSyncObjects = [
-  useBackendSync(dashboardStore, 'vuetorrent_dashboard', {
+  useBackendSync(dashboardStore, 'auratorrent_dashboard', {
     whitelist: ['displayMode'],
+    legacyKey: 'vuetorrent_dashboard',
   }),
-  useBackendSync(torrentStore, 'vuetorrent_torrents', {
+  useBackendSync(torrentStore, 'auratorrent_torrents', {
     whitelist: ['sortCriterias'],
+    legacyKey: 'vuetorrent_torrents',
   }),
-  useBackendSync(sidebarStore, 'vuetorrent_sidebarSettings'),
-  useBackendSync(vuetorrentStore, 'vuetorrent_webuiSettings', {
+  useBackendSync(sidebarStore, 'auratorrent_sidebarSettings', {
+    legacyKey: 'vuetorrent_sidebarSettings',
+  }),
+  useBackendSync(vuetorrentStore, 'auratorrent_webuiSettings', {
     blacklist: ['uiTitleCustom'],
+    legacyKey: 'vuetorrent_webuiSettings',
   }),
 ]
 

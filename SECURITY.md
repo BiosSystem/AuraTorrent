@@ -85,6 +85,8 @@ Below is an in-depth breakdown of the security refactoring and vulnerability pat
   -localStorage.setItem('vuetorrent_webuiSettings', settings.value)
   +localStorage.setItem('webuiSettings', settings.value)
   ```
+* **Backend sync keys** (`src/App.vue`, `src/composables/BackendSync.ts`, #129):
+  Settings synced to the optional settings backend used VueTorrent's keys (`vuetorrent_webuiSettings`, `vuetorrent_dashboard`, `vuetorrent_torrents`, `vuetorrent_sidebarSettings`), so a VueTorrent install on the same backend could read and overwrite them. They now sync under `auratorrent_*` keys. On first load an empty `auratorrent_*` key is filled once from the matching `vuetorrent_*` key; the old key is left untouched for any VueTorrent install still using it.
 
 ### 4. Telegram Companion Bot Access Controls (AuraBot)
 * **Target File**: `bot/main.py`
