@@ -3,7 +3,7 @@ import { shallowRef } from 'vue'
 import { isObjectEqual } from '@/helpers'
 import { backend } from '@/services/backend'
 
-export function useBackendSync(store: Store, key: string, config: { blacklist?: string[]; whitelist?: string[] } = {}) {
+export function useBackendSync(store: Store, key: string, config: { blacklist?: string[]; whitelist?: string[]; legacyKey?: string } = {}) {
   const cancelWatcherCallback = shallowRef(() => {})
   const _lastState: Record<string, any> = shallowRef({})
 
@@ -18,7 +18,14 @@ export function useBackendSync(store: Store, key: string, config: { blacklist?: 
   }
 
   async function loadState() {
-    const data = await backend.get(key)
+    let data = await backend.get(key)
+    let imported = false
+    // One-time import from the key VueTorrent uses. The old key is left as it
+    // is, since a VueTorrent install on the same backend may still read it.
+    if (!data && config.legacyKey) {
+      data = await backend.get(config.legacyKey)
+      imported = !!data
+    }
     if (!data) {
       return saveState()
     }
@@ -31,6 +38,9 @@ export function useBackendSync(store: Store, key: string, config: { blacklist?: 
       }
     })
     store.$patch(temp)
+    if (imported) {
+      return saveState()
+    }
     _lastState.value = JSON.parse(JSON.stringify(temp))
   }
 

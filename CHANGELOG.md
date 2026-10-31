@@ -1,3 +1,9 @@
+## [2026-10-31 - Sync settings under AuraTorrent's own backend keys]
+
+- Sync the dashboard, torrent list, sidebar and WebUI settings to the settings backend under `auratorrent_*` keys instead of VueTorrent's `vuetorrent_*` keys, so a VueTorrent install on the same backend no longer reads or overwrites them.
+- Import existing settings once from the old `vuetorrent_*` key when the new key is empty; the old key is not deleted.
+- Add unit tests for the import and the whitelist on imported data. (#129)
+
 ## [2026-10-31 - Raise follow-redirects to 1.16.2]
 
 - Raise follow-redirects from 1.16.1 to 1.16.2 (CVE-2026-116689, reached through axios). Lockfile only.
