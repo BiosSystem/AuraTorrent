@@ -1,3 +1,8 @@
+## [2026-10-31 - Raise follow-redirects to 1.16.2]
+
+- Raise follow-redirects from 1.16.1 to 1.16.2 (CVE-2026-116689, reached through axios). Lockfile only.
+- Verify 372 unit tests across 25 files and the production build. (#127)
+
 ## [2026-08-27 - Remove intrusive RSS manager from main dashboard]
 
 - Remove RssManager component from Dashboard.vue to prevent persistent overlay on torrent views.
