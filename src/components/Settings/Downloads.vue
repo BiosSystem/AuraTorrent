@@ -98,7 +98,7 @@ onBeforeMount(() => {
 })
 
 watch(
-  () => isExportDirEnabled,
+  isExportDirEnabled,
   newValue => {
     if (!newValue) {
       preferenceStore.preferences!.export_dir = ''
@@ -106,7 +106,7 @@ watch(
   }
 )
 watch(
-  () => isExportDirFinEnabled,
+  isExportDirFinEnabled,
   newValue => {
     if (!newValue) {
       preferenceStore.preferences!.export_dir_fin = ''
