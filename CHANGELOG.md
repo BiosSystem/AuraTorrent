@@ -1,11 +1,8 @@
 ## [Unreleased] - 2026-11-04
 
 - Dependabot: major-version updates are no longer proposed; majors are upgraded by hand. (#136)
-<<<<<<< HEAD
 - Dependabot: vue-tsc is held at 3.3.13; 3.3.14 reports false type errors on template v-models. (#140)
-=======
 - Unticking an export folder in Download settings clears its path again; the watchers had watched the ref object instead of its value and never ran. (#138)
->>>>>>> 7611961 (Clear export folders when their box is unticked)
 
 ## [2026-10-31 - Sync settings under AuraTorrent's own backend keys]
 
