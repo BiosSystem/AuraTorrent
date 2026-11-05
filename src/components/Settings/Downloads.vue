@@ -97,22 +97,16 @@ onBeforeMount(() => {
   })
 })
 
-watch(
-  () => isExportDirEnabled,
-  newValue => {
-    if (!newValue) {
-      preferenceStore.preferences!.export_dir = ''
-    }
+watch(isExportDirEnabled, newValue => {
+  if (!newValue) {
+    preferenceStore.preferences!.export_dir = ''
   }
-)
-watch(
-  () => isExportDirFinEnabled,
-  newValue => {
-    if (!newValue) {
-      preferenceStore.preferences!.export_dir_fin = ''
-    }
+})
+watch(isExportDirFinEnabled, newValue => {
+  if (!newValue) {
+    preferenceStore.preferences!.export_dir_fin = ''
   }
-)
+})
 
 function editItem(item: MonitoredFolder) {
   monitoredFoldersEditedIndex.value = monitoredFoldersData.value.indexOf(item)
