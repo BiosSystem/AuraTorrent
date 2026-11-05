@@ -1,3 +1,6 @@
+# Major versions are ignored for every ecosystem and upgraded by hand, one
+# repository at a time; a vulnerability that needs a major still shows up as
+# a Dependabot alert.
 version: 2
 updates:
   # Maintain dependencies for GitHub Actions
@@ -9,6 +12,9 @@ updates:
       all:
         patterns:
         - '*'
+    ignore:
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
 
   # Maintain dependencies for npm
   - package-ecosystem: 'npm'
@@ -32,3 +38,6 @@ updates:
         - '*pinia*'
       patch:
         update-types: ["patch"]
+    ignore:
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']

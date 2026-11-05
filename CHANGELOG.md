@@ -1,3 +1,7 @@
+## [Unreleased] - 2026-11-04
+
+- Dependabot: major-version updates are no longer proposed; majors are upgraded by hand. (#136)
+
 ## [2026-10-31 - Sync settings under AuraTorrent's own backend keys]
 
 - Sync the dashboard, torrent list, sidebar and WebUI settings to the settings backend under `auratorrent_*` keys instead of VueTorrent's `vuetorrent_*` keys, so a VueTorrent install on the same backend no longer reads or overwrites them.
