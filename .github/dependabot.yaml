@@ -41,3 +41,9 @@ updates:
     ignore:
       - dependency-name: '*'
         update-types: ['version-update:semver-major']
+      # vue-tsc 3.3.14 reports `.value` on template v-models bound to reactive
+      # objects and Pinia stores (formData.add, vueTorrentStore.logoutUrl),
+      # code that has no `.value`. 3.3.13 type-checks clean. Drop this once a
+      # newer 3.3.x passes `npm run build`.
+      - dependency-name: 'vue-tsc'
+        versions: ['3.3.14']

@@ -1,6 +1,7 @@
 ## [Unreleased] - 2026-11-04
 
 - Dependabot: major-version updates are no longer proposed; majors are upgraded by hand. (#136)
+- Dependabot: vue-tsc is held at 3.3.13; 3.3.14 reports false type errors on template v-models. (#140)
 
 ## [2026-10-31 - Sync settings under AuraTorrent's own backend keys]
 
