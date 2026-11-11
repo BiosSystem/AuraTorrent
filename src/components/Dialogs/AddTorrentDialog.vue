@@ -28,6 +28,7 @@ const torrentStore = useTorrentStore()
 const vueTorrentStore = useVueTorrentStore()
 
 const fileOverflowDisplayLimit = 2
+const isSubmitting = ref(false)
 
 const isFormValid = computed(() => urls.value.length > 0 || files.value.length > 0)
 
@@ -45,7 +46,8 @@ const rename = computed({
 })
 
 function submit() {
-  if (!isFormValid.value) return
+  if (!isFormValid.value || isSubmitting.value) return
+  isSubmitting.value = true
 
   const payload: AddTorrentPayload = {
     addToTopOfQueue: addTorrentParams.value.add_to_top_of_queue,
@@ -90,6 +92,10 @@ function submit() {
       addTorrentParamsForm.value?.saveFields()
       addTorrentStore.resetForm()
       close()
+    })
+    .catch(() => {})
+    .finally(() => {
+      isSubmitting.value = false
     })
 }
 
@@ -190,7 +196,7 @@ onBeforeMount(() => {
       <v-card-actions class="mb-2">
         <v-btn :text="$t('dialogs.add.reset_form')" color="error" variant="flat" @click="addTorrentStore.resetForm()" />
         <v-spacer />
-        <v-btn :disabled="!isFormValid" :text="$t('dialogs.add.submit')" color="accent" type="submit" variant="elevated" @click="submit" />
+        <v-btn :disabled="!isFormValid || isSubmitting" :loading="isSubmitting" :text="$t('dialogs.add.submit')" color="accent" type="submit" variant="elevated" @click="submit" />
         <v-btn :text="$t('common.close')" color="" variant="flat" @click="close" />
       </v-card-actions>
     </v-card>
