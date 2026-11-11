@@ -29,8 +29,9 @@ import type { MaindataResponse, SearchResultsResponse, TorrentPeersResponse } fr
 
 type Parameters = Record<string, any>
 
-// retryCount is our own bookkeeping on the request config, not an axios field.
-type RetryableConfig = InternalAxiosRequestConfig & { retryCount?: number }
+// retryCount and noRetry are our own bookkeeping on the request config, not axios fields.
+type RetryableConfig = InternalAxiosRequestConfig & { retryCount?: number; noRetry?: boolean }
+type QbitRequestConfig = AxiosRequestConfig & { noRetry?: boolean }
 
 export default class QBitProvider implements IProvider {
   private static _instance: QBitProvider
@@ -61,9 +62,10 @@ export default class QBitProvider implements IProvider {
         config.retryCount = config.retryCount ?? 0
 
         const isNetworkError = error.code === 'ECONNABORTED' || error.message.includes('timeout') || error.message.includes('Network Error')
+        const skipRetry = Boolean(config.noRetry || config.url?.endsWith('/torrents/add'))
 
-        // Exponential backoff for network/timeout errors, max 3 retries
-        if (isNetworkError && config.retryCount < 3) {
+        // Exponential backoff for idempotent network/timeout errors, max 3 retries
+        if (isNetworkError && !skipRetry && config.retryCount < 3) {
           config.retryCount += 1
           const delay = Math.pow(2, config.retryCount) * 1000
           await new Promise(resolve => setTimeout(resolve, delay))
@@ -522,7 +524,11 @@ export default class QBitProvider implements IProvider {
       data.set('urls', urls)
     }
 
-    return this.axios.post('/torrents/add', data)
+    const reqConfig: QbitRequestConfig = {
+      timeout: 30000,
+      noRetry: true,
+    }
+    return this.axios.post('/torrents/add', data, reqConfig)
   }
 
   async setTorrentFilePriority(hash: string, idList: number[], priority: FilePriority): Promise<void> {
